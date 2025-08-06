@@ -3,11 +3,12 @@ import typescript from '@typescript-eslint/eslint-plugin';
 import typescriptParser from '@typescript-eslint/parser';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
+import prettier from 'eslint-plugin-prettier';
 
 export default [
   js.configs.recommended,
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
       parser: typescriptParser,
       parserOptions: {
@@ -16,6 +17,10 @@ export default [
         ecmaFeatures: {
           jsx: true,
         },
+      },
+      globals: {
+        process: 'readonly',
+        __DEV__: 'readonly',
       },
     },
     plugins: {

@@ -13,8 +13,8 @@
       "@/types/*": ["./types/*"],
       "@/assets/*": ["./assets/*"]
     },
-    "moduleResolution": "node",
-    "allowSynthnticDefaultImports": true,
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "jsx": "react-native",
     "resolveJsonModule": true

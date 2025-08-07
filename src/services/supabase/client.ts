@@ -6,9 +6,7 @@ const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
 const supabaseAnonkey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
 
 if (!supabaseUrl || !supabaseAnonkey) {
-  throw new Error(
-    'Missing Supabase environment variables. Please check your .env.local file.'
-  );
+  throw new Error('Missing Supabase environment variables. Please check your .env.local file.');
 }
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonkey, {

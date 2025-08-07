@@ -4,6 +4,7 @@ import typescriptParser from '@typescript-eslint/parser';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import prettier from 'eslint-plugin-prettier';
+import globals from 'globals';
 
 export default [
   js.configs.recommended,
@@ -21,6 +22,7 @@ export default [
       globals: {
         process: 'readonly',
         __DEV__: 'readonly',
+        ...globals.browser,
       },
     },
     plugins: {

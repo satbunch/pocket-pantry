@@ -16,7 +16,6 @@ export default function SignupScreen() {
       <View style={styles.formContainer}>
         <LoginForm onLoginSuccess={handleLoginSuccess} />
       </View>
-
     </View>
   );
 }

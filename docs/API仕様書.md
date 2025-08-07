@@ -1,15 +1,16 @@
 ---
-tags: 
+tags:
 created: 2025-08-05 11:08
 updated: 2025-08-05 11:53
 ---
+
 # PocketPantry API仕様書（MVP版）
 
 ## 共通事項
 
-* API形式：REST
-* 認証：Supabase Auth（Bearer Token）
-* レスポンス形式：JSON
+- API形式：REST
+- 認証：Supabase Auth（Bearer Token）
+- レスポンス形式：JSON
 
 ---
 
@@ -17,13 +18,13 @@ updated: 2025-08-05 11:53
 
 ### 1.1 GET /items
 
-* 説明：在庫一覧を取得
-* リクエストパラメータ：
+- 説明：在庫一覧を取得
+- リクエストパラメータ：
+  - storage_category（オプション：冷蔵／冷凍／常温／野菜室）
+  - item_status（オプション：in_stock / low / out）
 
-  * storage\_category（オプション：冷蔵／冷凍／常温／野菜室）
-  * item\_status（オプション：in\_stock / low / out）
-* レスポンス：
-	 なお、レスポンスはマスタ結合済み文字列を返却（unit）
+- レスポンス：
+  なお、レスポンスはマスタ結合済み文字列を返却（unit）
 
 ```json
 [
@@ -46,8 +47,8 @@ updated: 2025-08-05 11:53
 
 ### 1.2 POST /items
 
-* 説明：食材を新規登録
-* リクエストボディ：
+- 説明：食材を新規登録
+- リクエストボディ：
 
 ```json
 {
@@ -63,12 +64,12 @@ updated: 2025-08-05 11:53
 }
 ```
 
-* レスポンス：201 Created + 登録内容
+- レスポンス：201 Created + 登録内容
 
 ### 1.3 PATCH /items/{id}
 
-* 説明：食材情報を更新
-* リクエストボディ：部分更新可能
+- 説明：食材情報を更新
+- リクエストボディ：部分更新可能
 
 ```json
 {
@@ -78,21 +79,21 @@ updated: 2025-08-05 11:53
 }
 ```
 
-* レスポンス：200 OK + 更新後データ
+- レスポンス：200 OK + 更新後データ
 
 ### 1.4 DELETE /items/{id}
 
-* 説明：食材を削除
-* レスポンス：204 No Content
+- 説明：食材を削除
+- レスポンス：204 No Content
 
 ---
 
 ## 2. Shopping Lists API
 
-### 2.1 GET /shopping\_lists
+### 2.1 GET /shopping_lists
 
-* 説明：買い物リスト一覧を取得
-* レスポンス：
+- 説明：買い物リスト一覧を取得
+- レスポンス：
 
 ```json
 [
@@ -104,10 +105,10 @@ updated: 2025-08-05 11:53
 ]
 ```
 
-### 2.2 POST /shopping\_lists
+### 2.2 POST /shopping_lists
 
-* 説明：新しい買い物リストを作成
-* リクエストボディ：
+- 説明：新しい買い物リストを作成
+- リクエストボディ：
 
 ```json
 {
@@ -115,21 +116,21 @@ updated: 2025-08-05 11:53
 }
 ```
 
-* レスポンス：201 Created + リスト情報
+- レスポンス：201 Created + リスト情報
 
-### 2.3 DELETE /shopping\_lists/{id}
+### 2.3 DELETE /shopping_lists/{id}
 
-* 説明：買い物リストを削除
-* レスポンス：204 No Content
+- 説明：買い物リストを削除
+- レスポンス：204 No Content
 
 ---
 
 ## 3. Shopping List Items API
 
-### 3.1 GET /shopping\_lists/{id}/items
+### 3.1 GET /shopping_lists/{id}/items
 
-* 説明：指定した買い物リストの明細を取得
-* レスポンス：
+- 説明：指定した買い物リストの明細を取得
+- レスポンス：
 
 ```json
 [
@@ -150,10 +151,10 @@ updated: 2025-08-05 11:53
 ]
 ```
 
-### 3.2 POST /shopping\_lists/{id}/items
+### 3.2 POST /shopping_lists/{id}/items
 
-* 説明：リストに食材を追加
-* リクエストボディ：
+- 説明：リストに食材を追加
+- リクエストボディ：
 
 ```json
 {
@@ -163,12 +164,12 @@ updated: 2025-08-05 11:53
 }
 ```
 
-* レスポンス：201 Created + 登録内容
+- レスポンス：201 Created + 登録内容
 
-### 3.3 PATCH /shopping\_list\_items/{id}
+### 3.3 PATCH /shopping_list_items/{id}
 
-* 説明：リスト明細を更新
-* リクエストボディ：
+- 説明：リスト明細を更新
+- リクエストボディ：
 
 ```json
 {
@@ -177,21 +178,21 @@ updated: 2025-08-05 11:53
 }
 ```
 
-* レスポンス：200 OK + 更新後データ
+- レスポンス：200 OK + 更新後データ
 
-### 3.4 DELETE /shopping\_list\_items/{id}
+### 3.4 DELETE /shopping_list_items/{id}
 
-* 説明：リスト明細を削除
-* レスポンス：204 No Content
+- 説明：リスト明細を削除
+- レスポンス：204 No Content
 
 ---
 
 ## 4. Families API
 
-### 4.1 GET /families/invite/{invite\_code}
+### 4.1 GET /families/invite/{invite_code}
 
-* 説明：招待コードからファミリー情報を取得（参加時に使用）
-* レスポンス：
+- 説明：招待コードからファミリー情報を取得（参加時に使用）
+- レスポンス：
 
 ```json
 {
@@ -200,10 +201,10 @@ updated: 2025-08-05 11:53
 }
 ```
 
-### 4.2 POST /profiles/join\_family
+### 4.2 POST /profiles/join_family
 
-* 説明：ユーザーがファミリーに参加
-* リクエストボディ：
+- 説明：ユーザーがファミリーに参加
+- リクエストボディ：
 
 ```json
 {
@@ -211,16 +212,16 @@ updated: 2025-08-05 11:53
 }
 ```
 
-* レスポンス：200 OK
+- レスポンス：200 OK
 
 ---
 
 ## 5. Usage Logs API
 
-### 5.1 POST /usage\_logs
+### 5.1 POST /usage_logs
 
-* 説明：OCRやバーコード使用時のログ記録
-* リクエストボディ：
+- 説明：OCRやバーコード使用時のログ記録
+- リクエストボディ：
 
 ```json
 {
@@ -231,7 +232,8 @@ updated: 2025-08-05 11:53
 }
 ```
 
-* レスポンス：201 Created
+- レスポンス：201 Created
 
 ```
+
 ```

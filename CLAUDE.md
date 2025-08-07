@@ -55,17 +55,20 @@ Always run `pnpm lint`, `pnpm format:check`, and `pnpm type-check` before commit
 
 ### Key Architectural Patterns
 
-**Authentication Flow**: 
+**Authentication Flow**:
+
 - `AuthContext` manages session state using Supabase auth
 - Root layout (`app/_layout.tsx`) handles routing based on authentication state
 - Authenticated users are redirected to `(tabs)`, unauthenticated to `(auth)/login`
 
 **State Management**:
+
 - Global state managed via React Context (currently only `AuthContext`)
 - Component-level state using useState/useEffect
 - Custom hooks for reusable stateful logic
 
 **Data Layer**:
+
 - Supabase client configured in `src/services/supabase/client.ts`
 - Database types defined in `src/types/database.ts`
 - Environment variables: `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY`
@@ -73,25 +76,30 @@ Always run `pnpm lint`, `pnpm format:check`, and `pnpm type-check` before commit
 ### Development Guidelines
 
 **Component Creation**:
+
 - Check existing `src/components/ui/` for reusable components before creating new ones
 - Follow the established folder structure (`ui/` for generic, `forms/` for form components)
 - Use TypeScript interfaces for all component props
 
 **Styling**:
+
 - Examine existing components for consistent styling patterns
 - The project uses React Native's built-in StyleSheet
 
 **Environment Configuration**:
+
 - Environment variables must be prefixed with `EXPO_PUBLIC_` to be available in the client
 - Supabase configuration requires URL and anonymous key environment variables
 
 **File Naming**:
+
 - React components: PascalCase with `.tsx` extension
 - Hooks: camelCase starting with `use` prefix
 - Types: PascalCase interfaces/types in `src/types/`
 - Services: camelCase with `.ts` extension
 
 **Authentication**:
+
 - Always use `useAuth()` hook to access authentication state
 - Check `loading` state before making auth-dependent decisions
 - Handle authentication errors appropriately in UI components

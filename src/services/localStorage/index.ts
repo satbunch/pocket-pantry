@@ -4,6 +4,11 @@ import type { LocalFoodItem, FoodCategory, StorageLocation } from './schemas';
 // 基本ラッパー
 export { LocalStorage } from './storage';
 
+export { LocalStorageManager } from './manager';
+export { LocalFoodItemsService } from './items';
+export { LocalShoppingService } from './shopping';
+export { LocalStorageDefaults } from './defaults';
+
 // 型定義
 export type {
   // キー・データソース

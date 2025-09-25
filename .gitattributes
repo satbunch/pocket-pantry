@@ -1,0 +1,2 @@
+# Markdown ファイルを LF に統一し、差分のノイズを減らす
+*.md text=auto eol=lf

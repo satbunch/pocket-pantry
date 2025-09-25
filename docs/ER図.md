@@ -1,8 +1,9 @@
 ---
-tags: 
+tags:
 created: 2025-08-05 10:42
 updated: 2025-08-05 10:48
 ---
+
 ```mermaid
 erDiagram
   families {

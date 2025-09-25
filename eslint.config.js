@@ -50,6 +50,7 @@ export default [
       'dist/**',
       'web-build/**',
       '*.config.js',
+      'docs/',
     ],
   },
 ];

@@ -13,11 +13,20 @@ function RootLayoutNav() {
     if (loading) return;
 
     const inAuthGroup = segments[0] === '(auth)';
+    const inTabsGroup = segments[0] === '(tabs)';
 
-    if (session && inAuthGroup) {
-      router.replace('/(tabs)');
-    } else if (!session && !inAuthGroup) {
-      router.replace('/(auth)/login');
+    // 🎯 新しいゲストファーストロジック
+    if (session) {
+      // 認証済みユーザー：タブ画面に移動
+      if (inAuthGroup) {
+        router.replace('/(tabs)/inventory');
+      }
+    } else {
+      // 未認証ユーザー：ゲストモードでタブ画面に移動
+      // 認証画面にいる場合のみログイン画面を表示
+      if (!inTabsGroup && !inAuthGroup) {
+        router.replace('/(tabs)/inventory');
+      }
     }
   }, [session, loading, segments, router]);
 

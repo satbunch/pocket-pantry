@@ -1,7 +1,7 @@
 ---
 tags: 
 created: 2025-08-05 11:08
-updated: 2025-08-05 11:53
+updated: 2025-08-07 14:35
 ---
 # PocketPantry API仕様書（MVP版）
 
@@ -14,12 +14,9 @@ updated: 2025-08-05 11:53
 ---
 
 ## 1. Items API（在庫管理）
-
 ### 1.1 GET /items
-
 * 説明：在庫一覧を取得
 * リクエストパラメータ：
-
   * storage\_category（オプション：冷蔵／冷凍／常温／野菜室）
   * item\_status（オプション：in\_stock / low / out）
 * レスポンス：
@@ -88,9 +85,7 @@ updated: 2025-08-05 11:53
 ---
 
 ## 2. Shopping Lists API
-
 ### 2.1 GET /shopping\_lists
-
 * 説明：買い物リスト一覧を取得
 * レスポンス：
 
@@ -116,9 +111,7 @@ updated: 2025-08-05 11:53
 ```
 
 * レスポンス：201 Created + リスト情報
-
 ### 2.3 DELETE /shopping\_lists/{id}
-
 * 説明：買い物リストを削除
 * レスポンス：204 No Content
 

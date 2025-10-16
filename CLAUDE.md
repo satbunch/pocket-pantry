@@ -4,17 +4,34 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Pocket Pantry is a React Native mobile application built with Expo and TypeScript for managing pantry inventory and reducing food waste. The app uses Supabase for backend services including authentication and data storage.
+Pocket Pantryは、ゲストファーストアプローチによる食材管理React Nativeアプリです。ユーザーは**登録なしで即座に利用開始**でき、必要に応じて段階的に認証・家族共有機能にアップグレードできます。
+
+### 開発フェーズ
+
+**Phase 1 (MVP - 現在注力中)**: ゲストモード（AsyncStorageローカル管理）
+
+- 食材登録（手動入力）・在庫管理・買い物リスト・賞味期限通知
+
+**Phase 2 (次期)**: 認証・家族共有
+
+- Supabase Auth・ゲストデータ移行・リアルタイム同期・OCR/バーコード機能
+
+**Phase 3 (将来)**: 高度機能
+
+- 食材写真・AI献立提案・分析機能
+
+詳細は[docs/00\_要件定義.md](docs/00_要件定義.md)を参照。
 
 ## Technology Stack
 
-- **Framework**: React Native with Expo SDK 53
-- **Language**: TypeScript with strict type checking
-- **Routing**: Expo Router with file-based routing
-- **Backend**: Supabase (authentication, database, real-time)
+- **Framework**: React Native 0.81.4 with Expo SDK 54.0.10
+- **Language**: TypeScript 5.9.2 (strict mode enabled)
+- **Routing**: Expo Router 6.x (file-based routing)
+- **Backend**: Supabase 2.53.0 (Phase 2以降で利用)
+- **Local Storage**: @react-native-async-storage/async-storage 2.2.0
 - **Package Manager**: pnpm
-- **State Management**: React Context (AuthContext)
-- **Development**: ESLint + Prettier + TypeScript compiler
+- **State Management**: React Context (将来実装予定)
+- **Development**: ESLint 9 + Prettier 3 + TypeScript compiler
 
 ## Essential Commands
 
@@ -37,69 +54,171 @@ Always run `pnpm lint`, `pnpm format:check`, and `pnpm type-check` before commit
 
 ## Code Architecture
 
-### Directory Structure
+### 現在の状態 (2025-10-16時点)
 
-- `app/`: Expo Router file-based routing
-  - `(auth)/`: Authentication-related screens (login, register)
-  - `(tabs)/`: Main app screens with tab navigation
-  - `_layout.tsx`: Root layout with AuthProvider and navigation logic
-  - `modals/`: Modal screens
-- `src/`: Main application source code
-  - `components/`: Reusable React components
-    - `ui/`: Generic UI components (Button, Card, etc.)
-    - `forms/`: Form-specific components
-  - `contexts/`: React Context providers for global state
-  - `hooks/`: Custom React hooks
-  - `services/`: External API integrations (Supabase client)
-  - `types/`: TypeScript type definitions
+プロジェクトは**クリーンスレート状態**です。2025年10月上旬に大規模なリセットが実行され、以下が削除されました:
 
-### Key Architectural Patterns
+- 認証フロー（AuthContext、login/registerスクリーン）
+- コンポーネントライブラリ（Button、Input等）
+- サービス層（Supabase client、LocalStorage manager）
+- 型定義（database.ts等）
 
-**Authentication Flow**:
+現在実装されているのは:
 
-- `AuthContext` manages session state using Supabase auth
-- Root layout (`app/_layout.tsx`) handles routing based on authentication state
-- Authenticated users are redirected to `(tabs)`, unauthenticated to `(auth)/login`
+- [app/\_layout.tsx](app/_layout.tsx): 最小限のExpo Router Stack設定のみ
+- [app/(\_tabs)/](<app/(_tabs)/>): 空のディレクトリ（タブナビゲーション予定地）
+- [src/](src/): 空のディレクトリ（実装待ち）
 
-**State Management**:
+### 計画されているディレクトリ構造
 
-- Global state managed via React Context (currently only `AuthContext`)
-- Component-level state using useState/useEffect
-- Custom hooks for reusable stateful logic
+**Phase 1 (ゲストモード)**:
 
-**Data Layer**:
+```
+app/
+  ├── (_tabs)/                    # タブナビゲーション
+  │   ├── _layout.tsx            # タブレイアウト
+  │   ├── inventory/             # 在庫管理画面
+  │   ├── shopping/              # 買い物リスト画面
+  │   └── settings/              # 設定画面
+  └── _layout.tsx                # ルートレイアウト
 
-- Supabase client configured in `src/services/supabase/client.ts`
-- Database types defined in `src/types/database.ts`
-- Environment variables: `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY`
+src/
+  ├── components/
+  │   ├── ui/                    # 汎用UIコンポーネント
+  │   │   ├── Button.tsx
+  │   │   ├── Input.tsx
+  │   │   └── Card.tsx
+  │   └── forms/                 # フォーム専用コンポーネント
+  │       └── ItemForm.tsx
+  ├── services/
+  │   └── localStorage/          # AsyncStorage管理
+  │       ├── manager.ts         # 6MB制限対応
+  │       ├── items.ts
+  │       └── shopping.ts
+  ├── hooks/
+  │   ├── useLocalStorage.ts
+  │   └── useNotifications.ts
+  └── types/
+      └── item.ts                # 食材型定義
+```
 
-### Development Guidelines
+**Phase 2追加予定**:
 
-**Component Creation**:
+```
+src/
+  ├── contexts/
+  │   └── AuthContext.tsx        # Supabase認証
+  ├── services/
+  │   ├── supabase/
+  │   │   └── client.ts
+  │   └── migration/             # ゲストデータ移行
+  └── types/
+      └── database.ts            # Supabase型定義
+```
 
-- Check existing `src/components/ui/` for reusable components before creating new ones
-- Follow the established folder structure (`ui/` for generic, `forms/` for form components)
-- Use TypeScript interfaces for all component props
+### データ層設計
 
-**Styling**:
+**Phase 1: ローカルファースト**
 
-- Examine existing components for consistent styling patterns
-- The project uses React Native's built-in StyleSheet
+- **AsyncStorage**によるデバイス内永続化
+- Android 6MB制限に配慮した設計
+- データ構造: items, shopping_lists, settings
+- バックアップなし（Phase 2でクラウド移行）
 
-**Environment Configuration**:
+**Phase 2: ハイブリッド同期**
 
-- Environment variables must be prefixed with `EXPO_PUBLIC_` to be available in the client
-- Supabase configuration requires URL and anonymous key environment variables
+- **Supabase Database**へのゲストデータ自動移行
+- Realtime購読によるfamily_id単位の同期
+- RLSポリシーによるセキュリティ確保
+- テーブル設計は[docs/02\_テーブル定義書.md](docs/02_テーブル定義書.md)参照
 
-**File Naming**:
+**環境変数** (Phase 2で必要):
 
-- React components: PascalCase with `.tsx` extension
-- Hooks: camelCase starting with `use` prefix
-- Types: PascalCase interfaces/types in `src/types/`
-- Services: camelCase with `.ts` extension
+- `EXPO_PUBLIC_SUPABASE_URL`
+- `EXPO_PUBLIC_SUPABASE_ANON_KEY`
 
-**Authentication**:
+## Development Guidelines
 
-- Always use `useAuth()` hook to access authentication state
-- Check `loading` state before making auth-dependent decisions
-- Handle authentication errors appropriately in UI components
+### Phase 1 (MVP) 開発原則
+
+**ゲストファースト設計**:
+
+- 初回起動時に登録画面を表示しない
+- すべての機能をAsyncStorageベースで実装
+- Phase 2への移行を考慮した型設計（family_id等の将来追加を想定）
+
+**データ永続化**:
+
+- AsyncStorageの6MB制限（Android）を意識
+- JSON.stringify/parseでシリアライズ
+- エラーハンドリングは必須（ストレージフル対策）
+- キー命名: `@PocketPantry:items`, `@PocketPantry:shopping_lists`
+
+**通知機能**:
+
+- expo-notificationsによるローカル通知
+- 賞味期限当日の朝8時にプッシュ
+- ユーザー設定でON/OFF切替可能
+
+### コーディング規約
+
+**ファイル命名**:
+
+- Reactコンポーネント: PascalCase（`Button.tsx`）
+- Hooks: `use`プレフィックス（`useLocalStorage.ts`）
+- Services: camelCase（`itemService.ts`）
+- 型定義: PascalCase interface/type（`src/types/item.ts`）
+
+**TypeScript**:
+
+- strict mode必須（tsconfig.jsonで有効化済み）
+- すべてのコンポーネントpropsに型定義
+- `any`型の使用禁止（unknown使用を検討）
+- エクスポートする型はすべて明示的に定義
+
+**スタイリング**:
+
+- React NativeのStyleSheet.create()を使用
+- インラインスタイルは避ける
+- 色・サイズの定数は`src/constants/theme.ts`で管理（将来実装）
+
+**コンポーネント設計**:
+
+- 新規作成前に`src/components/ui/`の既存コンポーネント確認
+- `ui/`: 汎用コンポーネント（Button, Input, Card等）
+- `forms/`: フォーム専用コンポーネント（ItemForm等）
+- Propsインターフェースは必須（例: `ButtonProps`）
+
+**環境変数**:
+
+- Expo環境変数は`EXPO_PUBLIC_`プレフィックス必須
+- Phase 2でSupabase設定が必要: `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`
+
+### TypeScript Path Aliases
+
+tsconfig.jsonで以下のエイリアス設定済み:
+
+```typescript
+import { Button } from '@/components/ui/Button';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
+import type { Item } from '@/types/item';
+```
+
+利用可能なエイリアス: `@/components/*`, `@/screens/*`, `@/hooks/*`, `@/utils/*`, `@/constants/*`, `@/types/*`, `@/assets/*`
+
+## 重要なドキュメント
+
+実装前に必ず確認:
+
+- [docs/00\_要件定義.md](docs/00_要件定義.md): ゲストファーストアプローチの全体像
+- [docs/01_API仕様書.md](docs/01_API仕様書.md): REST API定義（Phase 2以降）
+- [docs/02\_テーブル定義書.md](docs/02_テーブル定義書.md): データベーススキーマ（Phase 2以降）
+- [docs/20\_画面遷移図.md](docs/20_画面遷移図.md): 画面フロー
+- [docs/30\_食材登録フロー図.md](docs/30_食材登録フロー図.md): 食材登録UX
+
+## 既知の制約事項
+
+- **AsyncStorage容量**: Android 6MB、iOS無制限（実質的には適度に制限）
+- **Expo New Architecture**: 有効化済み（app.jsonで設定）
+- **Phase 1スコープ**: 認証なし、Supabase未使用、ローカル通知のみ
+- **Phase 2移行**: ゲストデータをSupabaseに自動移行する機能が必要

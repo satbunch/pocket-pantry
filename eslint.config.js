@@ -44,6 +44,20 @@ export default [
     },
   },
   {
+    files: ['**/*.cjs'],
+    languageOptions: {
+      globals: {
+        __dirname: 'readonly',
+        __filename: 'readonly',
+        require: 'readonly',
+        module: 'readonly',
+        exports: 'readonly',
+        ...globals.node,
+      },
+      sourceType: 'commonjs',
+    },
+  },
+  {
     ignores: [
       'node_modules/**',
       '.expo/**',

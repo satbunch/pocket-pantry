@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { getAllIngredients, deleteIngredient } from '@/services/localStorage/ingredients';
 import type { Ingredient, StorageCategory } from '@/types/ingredient';
+import { mockIngredients } from '@/src/data/mockIngredients';
 
 const STORAGE_CATEGORIES: StorageCategory[] = ['冷蔵', '冷凍', '常温', '野菜室'];
 
@@ -17,7 +18,8 @@ export default function InventoryScreen() {
 
   // 食材データを読み込み
   const loadIngredients = useCallback(async () => {
-    const data = await getAllIngredients();
+    // const data = await getAllIngredients();
+    const data = mockIngredients;
     setIngredients(data);
   }, []);
 

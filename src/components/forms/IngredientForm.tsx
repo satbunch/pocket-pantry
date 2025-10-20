@@ -2,12 +2,15 @@
  * 食材登録フォームコンポーネント
  */
 import { useState } from 'react';
-import { View, Text, Switch, ScrollView } from 'react-native';
+import { View, Text, Switch, ScrollView, Modal, TouchableOpacity } from 'react-native';
 import { Input } from '@/components/ui/Input';
-import { Picker, type PickerOption } from '@/components/ui/Picker';
+// import { Picker, type PickerOption } from '@/components/ui/Picker';
+import { Picker } from '@react-native-picker/picker';
 import { Button } from '@/components/ui/Button';
 import { FormField } from '@/components/ui/FormField';
 import type { CreateIngredientInput, StorageCategory, UnitType } from '@/types/ingredient';
+
+type PickerOption = { label: string; value: string };
 
 const STORAGE_OPTIONS: PickerOption[] = [
   { label: '冷蔵', value: '冷蔵' },
@@ -41,6 +44,7 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pickerVisible, setPickerVisible] = useState(false);
 
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -116,13 +120,38 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
 
             <View>
               <FormField error={errors.storageCategory} required>
-                <Picker
-                  label="保存場所"
-                  value={storageCategory}
-                  options={STORAGE_OPTIONS}
-                  onValueChange={setStorageCategory}
-                  error={errors.storageCategory}
-                />
+                <TouchableOpacity
+                  onPress={() => setPickerVisible(true)}
+                  style={{
+                    padding: 12,
+                    borderWidth: 1,
+                    borderColor: errors.storageCategory ? '#EF4444' : '#D1D5DB',
+                    borderRadius: 8,
+                  }}
+                >
+                  <Text>
+                    {storageCategory
+                      ? STORAGE_OPTIONS.find(option => option.value === storageCategory)?.label
+                      : '保存場所を選択'}
+                  </Text>
+                </TouchableOpacity>
+                <Modal visible={pickerVisible} transparent animationType="slide">
+                  <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.4)' }}>
+                    <View style={{ backgroundColor: 'white' }}>
+                      <Picker
+                        selectedValue={storageCategory}
+                        onValueChange={itemValue => {
+                          setStorageCategory(itemValue);
+                          setPickerVisible(false);
+                        }}
+                      >
+                        {STORAGE_OPTIONS.map(option => (
+                          <Picker.Item key={option.value} label={option.label} value={option.value} />
+                        ))}
+                      </Picker>
+                    </View>
+                  </View>
+                </Modal>
               </FormField>
             </View>
           </View>
@@ -147,14 +176,12 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
 
               <View className="flex-1">
                 <FormField error={errors.unit} required>
-                  <Picker
-                    label="単位"
-                    value={unit}
-                    options={UNIT_OPTIONS}
-                    onValueChange={setUnit}
-                    error={errors.unit}
-                    className="flex-1"
-                  />
+                  <Picker selectedValue={unit} onValueChange={itemValue => setUnit(itemValue)}>
+                    <Picker.Item label="単位を選択" />
+                    {UNIT_OPTIONS.map(option => (
+                      <Picker.Item key={option.value} label={option.label} value={option.value} />
+                    ))}
+                  </Picker>
                 </FormField>
               </View>
             </View>

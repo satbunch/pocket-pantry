@@ -1,7 +1,7 @@
 /**
- * ボタンコンポーネント
+ * ボタンコンポーネント (React Native Paper)
  */
-import { TouchableOpacity, Text } from 'react-native';
+import { Button as PaperButton } from 'react-native-paper';
 
 export interface ButtonProps {
   title: string;
@@ -12,26 +12,27 @@ export interface ButtonProps {
 }
 
 export function Button({ title, onPress, variant = 'primary', disabled = false, className = '' }: ButtonProps) {
-  const variantClasses = {
-    primary: 'bg-blue-500',
-    secondary: 'bg-gray-200',
-    danger: 'bg-red-500',
+  const modeMap = {
+    primary: 'contained' as const,
+    secondary: 'outlined' as const,
+    danger: 'contained' as const,
   };
 
-  const textVariantClasses = {
-    primary: 'text-white',
-    secondary: 'text-black',
-    danger: 'text-white',
+  const buttonColorMap = {
+    primary: undefined, // デフォルトテーマカラー使用
+    secondary: undefined,
+    danger: '#EF4444', // Tailwind red-500
   };
 
   return (
-    <TouchableOpacity
-      className={`py-3 px-6 rounded-lg items-center justify-center ${variantClasses[variant]} ${disabled ? 'opacity-50' : ''} ${className}`}
+    <PaperButton
+      mode={modeMap[variant]}
       onPress={onPress}
       disabled={disabled}
-      activeOpacity={0.7}
+      buttonColor={buttonColorMap[variant]}
+      className={className}
     >
-      <Text className={`text-base font-semibold ${textVariantClasses[variant]}`}>{title}</Text>
-    </TouchableOpacity>
+      {title}
+    </PaperButton>
   );
 }

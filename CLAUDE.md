@@ -27,6 +27,9 @@ Pocket Pantryは、ゲストファーストアプローチによる食材管理R
 - **Framework**: React Native 0.81.4 with Expo SDK 54.0.10
 - **Language**: TypeScript 5.9.2 (strict mode enabled)
 - **Routing**: Expo Router 6.x (file-based routing)
+- **UI Components**: React Native Paper 5.14.5 (Material Design)
+- **Styling**: NativeWind 4.2.1 (Tailwind CSS for React Native)
+- **Icons**: Lucide React Native 0.546.0
 - **Backend**: Supabase 2.53.0 (Phase 2以降で利用)
 - **Local Storage**: @react-native-async-storage/async-storage 2.2.0
 - **Package Manager**: pnpm
@@ -51,11 +54,13 @@ pnpm type-check           # Run TypeScript compiler (no emit)
 ```
 
 **IMPORTANT**: After completing any implementation, automatically run the following commands in this order:
+
 1. `pnpm lint` - Run ESLint check
 2. `pnpm format:check` - Check code formatting
 3. `pnpm type-check` - Run TypeScript compiler
 
 If any errors are found:
+
 - Run `pnpm format` to auto-fix formatting issues
 - Fix any remaining lint or type errors
 - Re-run all three commands to verify
@@ -63,6 +68,7 @@ If any errors are found:
 Only report implementation as complete after all checks pass successfully.
 
 **Auto-approved commands** (no user confirmation required):
+
 - `pnpm lint`
 - `pnpm lint:fix`
 - `pnpm format`
@@ -195,9 +201,11 @@ src/
 
 **スタイリング**:
 
-- React NativeのStyleSheet.create()を使用
+- **UIコンポーネント**: React Native Paperを優先使用
+- **レイアウト・余白調整**: NativeWind（Tailwind CSS）を使用
+- 既存のカスタムコンポーネント（Button, Input, Card等）は段階的にPaperコンポーネントに置き換え
+- Paperのテーマカスタマイズは将来実装予定（現在はデフォルトテーマ使用）
 - インラインスタイルは避ける
-- 色・サイズの定数は`src/constants/theme.ts`で管理（将来実装）
 
 **コンポーネント設計**:
 

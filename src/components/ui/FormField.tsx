@@ -11,8 +11,8 @@ interface FormFieldProps {
 export function FormField({ error, required, children }: FormFieldProps) {
   return (
     <View>
+      {!error && required && <Text className="text-xs text-red-500 mt-1">※</Text>}
       {children}
-      {!error && required && <Text className="text-xs text-red-500 mt-1">必須</Text>}
     </View>
   );
 }

@@ -1,7 +1,8 @@
 /**
- * テキスト入力コンポーネント
+ * テキスト入力コンポーネント (React Native Paper)
  */
-import { TextInput, Text, View } from 'react-native';
+import { View } from 'react-native';
+import { TextInput as PaperTextInput, HelperText } from 'react-native-paper';
 
 export interface InputProps {
   label: string;
@@ -27,21 +28,23 @@ export function Input({
   className = '',
 }: InputProps) {
   return (
-    <View className={`mb-4 ${className}`}>
-      <Text className="text-sm font-semibold text-gray-700 mb-2">{label}</Text>
-      <TextInput
+    <View className={className}>
+      <PaperTextInput
+        label={label}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
         keyboardType={keyboardType}
         multiline={multiline}
         numberOfLines={numberOfLines}
-        className={`border rounded-lg px-4 py-3 text-base ${
-          error ? 'border-red-500' : 'border-gray-300'
-        } ${multiline ? 'h-24' : ''}`}
-        placeholderTextColor="#9CA3AF"
+        mode="outlined"
+        error={!!error}
       />
-      {error && <Text className="text-red-500 text-sm mt-1">{error}</Text>}
+      {error && (
+        <HelperText type="error" visible={!!error}>
+          {error}
+        </HelperText>
+      )}
     </View>
   );
 }

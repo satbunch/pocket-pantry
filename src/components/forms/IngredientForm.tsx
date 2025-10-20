@@ -6,6 +6,7 @@ import { View, Text, Switch, ScrollView } from 'react-native';
 import { Input } from '@/components/ui/Input';
 import { Picker, type PickerOption } from '@/components/ui/Picker';
 import { Button } from '@/components/ui/Button';
+import { FormField } from '@/components/ui/FormField';
 import type { CreateIngredientInput, StorageCategory, UnitType } from '@/types/ingredient';
 
 const STORAGE_OPTIONS: PickerOption[] = [
@@ -100,70 +101,127 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
   };
 
   return (
-    <ScrollView className="flex-1 bg-white">
-      <View className="p-4">
-        <Input label="食材名" value={name} onChangeText={setName} placeholder="例: 牛乳" error={errors.name} />
+    <View className="flex-1 bg-gray-50">
+      <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 100 }}>
+        <View className="p-5 gap-5">
+          {/* 基本情報セクション */}
+          <View className="bg-white rounded-xl p-5 shadow-sm">
+            <Text className="text-lg font-bold text-gray-800 mb-4">基本情報</Text>
 
-        <Picker
-          label="保存場所"
-          value={storageCategory}
-          options={STORAGE_OPTIONS}
-          onValueChange={setStorageCategory}
-          error={errors.storageCategory}
-        />
+            <View className="mb-5">
+              <FormField error={errors.name} required>
+                <Input label="食材名" value={name} onChangeText={setName} placeholder="例: 牛乳" error={errors.name} />
+              </FormField>
+            </View>
 
-        <View className="flex-row gap-4">
-          <Input
-            label="数量"
-            value={quantity}
-            onChangeText={setQuantity}
-            placeholder="1"
-            keyboardType="numeric"
-            error={errors.quantity}
-            className="flex-1"
-          />
+            <View>
+              <FormField error={errors.storageCategory} required>
+                <Picker
+                  label="保存場所"
+                  value={storageCategory}
+                  options={STORAGE_OPTIONS}
+                  onValueChange={setStorageCategory}
+                  error={errors.storageCategory}
+                />
+              </FormField>
+            </View>
+          </View>
 
-          <Picker
-            label="単位"
-            value={unit}
-            options={UNIT_OPTIONS}
-            onValueChange={setUnit}
-            error={errors.unit}
-            className="flex-1"
-          />
-        </View>
+          {/* 数量セクション */}
+          <View className="bg-white rounded-xl p-5 shadow-sm">
+            <Text className="text-lg font-bold text-gray-800 mb-4">数量</Text>
 
-        <View className="mb-4">
-          <View className="flex-row justify-between items-center mb-2">
-            <Text className="text-sm font-semibold text-gray-700">賞味期限を管理</Text>
-            <Switch value={isExpiryManaged} onValueChange={setIsExpiryManaged} />
+            <View className="flex-row gap-4">
+              <View className="flex-1">
+                <FormField error={errors.quantity} required>
+                  <Input
+                    label="数量"
+                    value={quantity}
+                    onChangeText={setQuantity}
+                    placeholder="1"
+                    keyboardType="numeric"
+                    error={errors.quantity}
+                  />
+                </FormField>
+              </View>
+
+              <View className="flex-1">
+                <FormField error={errors.unit} required>
+                  <Picker
+                    label="単位"
+                    value={unit}
+                    options={UNIT_OPTIONS}
+                    onValueChange={setUnit}
+                    error={errors.unit}
+                    className="flex-1"
+                  />
+                </FormField>
+              </View>
+            </View>
+          </View>
+
+          {/* 賞味期限セクション */}
+          <View className="bg-white rounded-xl p-5 shadow-sm">
+            <View className="flex-row justify-between items-center mb-4">
+              <Text className="text-lg font-bold text-gray-800">賞味期限</Text>
+              <View className="flex-row items-center gap-3">
+                <Text className="text-sm text-gray-600">{isExpiryManaged ? '管理する' : '管理しない'}</Text>
+                <Switch value={isExpiryManaged} onValueChange={setIsExpiryManaged} />
+              </View>
+            </View>
+
+            {isExpiryManaged && (
+              <View>
+                <Input
+                  label="賞味期限"
+                  value={expiryDate}
+                  onChangeText={setExpiryDate}
+                  placeholder="2025-12-31"
+                  error={errors.expiryDate}
+                />
+                <Text className="text-xs text-gray-500 mt-1">形式: YYYY-MM-DD</Text>
+              </View>
+            )}
+
+            {!isExpiryManaged && <Text className="text-sm text-gray-500 italic">賞味期限は記録されません</Text>}
+          </View>
+
+          {/* メモセクション */}
+          <View className="bg-white rounded-xl p-5 shadow-sm">
+            <Text className="text-lg font-bold text-gray-800 mb-1">メモ</Text>
+            <Text className="text-xs text-gray-500 mb-4">任意</Text>
+
+            <Input
+              label="メモ"
+              value={memo}
+              onChangeText={setMemo}
+              placeholder="保存に関するメモなど"
+              multiline
+              numberOfLines={4}
+            />
           </View>
         </View>
+      </ScrollView>
 
-        {isExpiryManaged && (
-          <Input
-            label="賞味期限"
-            value={expiryDate}
-            onChangeText={setExpiryDate}
-            placeholder="2025-12-31"
-            error={errors.expiryDate}
+      {/* 固定ボタンエリア */}
+      <View className="bg-white border-t border-gray-200 px-5 py-4">
+        <View className="flex-row gap-3">
+          <Button
+            title="キャンセル"
+            onPress={onCancel}
+            variant="secondary"
+            className="flex-1"
+            disabled={isSubmitting}
           />
-        )}
-
-        <Input
-          label="メモ（任意）"
-          value={memo}
-          onChangeText={setMemo}
-          placeholder="保存に関するメモなど"
-          multiline
-          numberOfLines={3}
-        />
-
-        <View className="flex-row gap-3 mt-6">
-          <Button title="キャンセル" onPress={onCancel} variant="secondary" className="flex-1" />
-          <Button title="登録" onPress={handleSubmit} variant="primary" disabled={isSubmitting} className="flex-1" />
+          <Button
+            title={isSubmitting ? '登録中...' : '登録'}
+            onPress={handleSubmit}
+            variant="primary"
+            disabled={isSubmitting}
+            className="flex-1"
+          />
         </View>
       </View>
-    </ScrollView>
+    </View>
   );
 }

@@ -1,4 +1,6 @@
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
+import { TouchableOpacity } from 'react-native';
+import { X } from 'lucide-react-native';
 
 import '../global.css';
 
@@ -16,6 +18,24 @@ export default function rootLayout() {
           presentation: 'modal',
           title: '食材を追加',
           headerShown: true,
+          headerStyle: {
+            backgroundColor: '#ffffff',
+          },
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: '600',
+            color: '#111827',
+          },
+          headerShadowVisible: true,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.back()}
+              className="ml-4 p-2 rounded-full active:bg-gray-100"
+              activeOpacity={0.7}
+            >
+              <X size={24} color="#374151" />
+            </TouchableOpacity>
+          ),
         }}
       />
     </Stack>

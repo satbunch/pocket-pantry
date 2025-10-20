@@ -10,7 +10,7 @@ Pocket Pantryは、ゲストファーストアプローチによる食材管理R
 
 **Phase 1 (MVP - 現在注力中)**: ゲストモード（AsyncStorageローカル管理）
 
-- 食材登録（手動入力）・在庫管理・買い物リスト・賞味期限通知
+- 食材登録（手動入力）・食材管理・買い物リスト・賞味期限通知
 
 **Phase 2 (次期)**: 認証・家族共有
 
@@ -50,7 +50,24 @@ pnpm format:check         # Check formatting without changes
 pnpm type-check           # Run TypeScript compiler (no emit)
 ```
 
-Always run `pnpm lint`, `pnpm format:check`, and `pnpm type-check` before committing changes.
+**IMPORTANT**: After completing any implementation, automatically run the following commands in this order:
+1. `pnpm lint` - Run ESLint check
+2. `pnpm format:check` - Check code formatting
+3. `pnpm type-check` - Run TypeScript compiler
+
+If any errors are found:
+- Run `pnpm format` to auto-fix formatting issues
+- Fix any remaining lint or type errors
+- Re-run all three commands to verify
+
+Only report implementation as complete after all checks pass successfully.
+
+**Auto-approved commands** (no user confirmation required):
+- `pnpm lint`
+- `pnpm lint:fix`
+- `pnpm format`
+- `pnpm format:check`
+- `pnpm type-check`
 
 ## Code Architecture
 
@@ -77,7 +94,7 @@ Always run `pnpm lint`, `pnpm format:check`, and `pnpm type-check` before commit
 app/
   ├── (_tabs)/                    # タブナビゲーション
   │   ├── _layout.tsx            # タブレイアウト
-  │   ├── inventory/             # 在庫管理画面
+  │   ├── inventory/             # 食材管理画面
   │   ├── shopping/              # 買い物リスト画面
   │   └── settings/              # 設定画面
   └── _layout.tsx                # ルートレイアウト

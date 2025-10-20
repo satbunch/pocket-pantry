@@ -19,9 +19,9 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="inventory/index"
         options={{
-          title: '在庫リスト',
-          tabBarLabel: '在庫リスト',
-          headerTitle: '在庫リスト',
+          title: '食材リスト',
+          tabBarLabel: '食材リスト',
+          headerTitle: '食材リスト',
           tabBarIcon: ({ color, size }) => <List color={color} size={size} />,
         }}
       />
@@ -33,7 +33,10 @@ export default function TabsLayout() {
           headerTitle: '食材を追加',
           tabBarIcon: ({ color, size }) => <PlusCircle color={color} size={size} />,
           tabBarButton: props => (
-            <TouchableOpacity {...(props as any)} onPress={() => router.push('/(modals)/add_ingredient')} />
+            <TouchableOpacity
+              {...(props as Record<string, unknown>)}
+              onPress={() => router.push('/(modals)/add_ingredient')}
+            />
           ),
         }}
       />

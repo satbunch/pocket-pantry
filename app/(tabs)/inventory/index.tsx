@@ -1,9 +1,9 @@
 /**
- * 食材管理画面（在庫一覧）
+ * 食材管理画面（食材一覧）
  */
 import { useState, useEffect, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
-import { router, useFocusEffect } from 'expo-router';
+import { useFocusEffect } from 'expo-router';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { deleteIngredient } from '@/services/localStorage/ingredients';
@@ -84,7 +84,7 @@ export default function InventoryScreen() {
   const getStatusLabel = (status: Ingredient['ingredientStatus']) => {
     switch (status) {
       case 'in_stock':
-        return '在庫あり';
+        return 'あり';
       case 'low':
         return '残りわずか';
       case 'out':
@@ -102,9 +102,11 @@ export default function InventoryScreen() {
           <View className="flex-1">
             <Text className="text-lg font-semibold mb-2">{item.name}</Text>
             <View className="flex-row items-center">
-              <View className={`${getStatusBgColor(item.ingredientStatus)} px-2 py-1 rounded mr-2`}>
-                <Text className="text-white text-xs font-semibold">{getStatusLabel(item.ingredientStatus)}</Text>
-              </View>
+              {item.ingredientStatus !== 'in_stock' && (
+                <View className={`${getStatusBgColor(item.ingredientStatus)} px-2 py-1 rounded mr-2`}>
+                  <Text className="text-white text-xs font-semibold">{getStatusLabel(item.ingredientStatus)}</Text>
+                </View>
+              )}
               <Text className="text-sm text-gray-500">{item.storageCategory}</Text>
             </View>
           </View>

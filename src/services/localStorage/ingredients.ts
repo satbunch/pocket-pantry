@@ -95,7 +95,7 @@ export async function updateIngredient(input: UpdateIngredientInput): Promise<In
       updatedAt: new Date().toISOString(),
     };
 
-    // 在庫数が更新された場合はステータスも更新
+    // 数量が更新された場合はステータスも更新
     if (input.quantity !== undefined) {
       updated.ingredientStatus = determineStatus(input.quantity);
     }
@@ -145,7 +145,7 @@ function generateId(): string {
 }
 
 /**
- * 在庫数から自動的にステータスを判定
+ * 数量から自動的にステータスを判定
  */
 function determineStatus(quantity: number): IngredientStatus {
   if (quantity === 0) return 'out';

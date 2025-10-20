@@ -12,6 +12,7 @@
       "@/constants/*": ["./src/constants/*"],
       "@/types/*": ["./src/types/*"],
       "@/services/*": ["./src/services/*"],
+      "@/data/*": ["./src/data/*"],
       "@/assets/*": ["./assets/*"]
     },
     "moduleResolution": "bundler",

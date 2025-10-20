@@ -2,12 +2,13 @@
  * 食材管理画面（在庫一覧）
  */
 import { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
+import { router, useFocusEffect } from 'expo-router';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { getAllIngredients, deleteIngredient } from '@/services/localStorage/ingredients';
+import { deleteIngredient } from '@/services/localStorage/ingredients';
 import type { Ingredient, StorageCategory } from '@/types/ingredient';
-import { mockIngredients } from '@/src/data/mockIngredients';
+import { mockIngredients } from '@/data/mockIngredients';
 
 const STORAGE_CATEGORIES: StorageCategory[] = ['冷蔵', '冷凍', '常温', '野菜室'];
 
@@ -18,7 +19,6 @@ export default function InventoryScreen() {
 
   // 食材データを読み込み
   const loadIngredients = useCallback(async () => {
-    // const data = await getAllIngredients();
     const data = mockIngredients;
     setIngredients(data);
   }, []);
@@ -26,6 +26,13 @@ export default function InventoryScreen() {
   useEffect(() => {
     loadIngredients();
   }, [loadIngredients]);
+
+  // 画面がフォーカスされたときにリロード
+  useFocusEffect(
+    useCallback(() => {
+      loadIngredients();
+    }, [loadIngredients])
+  );
 
   // プルリフレッシュ
   const onRefresh = useCallback(async () => {
@@ -62,14 +69,14 @@ export default function InventoryScreen() {
   };
 
   // ステータスバッジの色
-  const getStatusColor = (status: Ingredient['ingredientStatus']) => {
+  const getStatusBgColor = (status: Ingredient['ingredientStatus']) => {
     switch (status) {
       case 'in_stock':
-        return '#34C759';
+        return 'bg-green-500';
       case 'low':
-        return '#FF9500';
+        return 'bg-orange-500';
       case 'out':
-        return '#FF3B30';
+        return 'bg-red-500';
     }
   };
 
@@ -91,29 +98,31 @@ export default function InventoryScreen() {
 
     return (
       <Card>
-        <View style={styles.ingredientHeader}>
-          <View style={styles.ingredientInfo}>
-            <Text style={styles.ingredientName}>{item.name}</Text>
-            <View style={styles.badgeContainer}>
-              <View style={[styles.badge, { backgroundColor: getStatusColor(item.ingredientStatus) }]}>
-                <Text style={styles.badgeText}>{getStatusLabel(item.ingredientStatus)}</Text>
+        <View className="flex-row justify-between items-start mb-2">
+          <View className="flex-1">
+            <Text className="text-lg font-semibold mb-2">{item.name}</Text>
+            <View className="flex-row items-center">
+              <View className={`${getStatusBgColor(item.ingredientStatus)} px-2 py-1 rounded mr-2`}>
+                <Text className="text-white text-xs font-semibold">{getStatusLabel(item.ingredientStatus)}</Text>
               </View>
-              <Text style={styles.category}>{item.storageCategory}</Text>
+              <Text className="text-sm text-gray-500">{item.storageCategory}</Text>
             </View>
           </View>
-          <Text style={styles.quantity}>
+          <Text className="text-xl font-bold text-blue-600">
             {item.quantity} {item.unit}
           </Text>
         </View>
 
         {item.isExpiryManaged && item.expiryDate && (
-          <View style={styles.expiryContainer}>
+          <View className="mt-2">
             <Text
-              style={[
-                styles.expiryText,
-                expiryStatus === 'expired' && styles.expiryExpired,
-                expiryStatus === 'soon' && styles.expirySoon,
-              ]}
+              className={`text-sm ${
+                expiryStatus === 'expired'
+                  ? 'text-red-500 font-semibold'
+                  : expiryStatus === 'soon'
+                    ? 'text-orange-500 font-semibold'
+                    : 'text-gray-500'
+              }`}
             >
               賞味期限: {item.expiryDate}
               {expiryStatus === 'expired' && ' (期限切れ)'}
@@ -122,32 +131,34 @@ export default function InventoryScreen() {
           </View>
         )}
 
-        {item.memo && <Text style={styles.memo}>{item.memo}</Text>}
+        {item.memo && <Text className="text-sm text-gray-500 mt-2">{item.memo}</Text>}
 
-        <View style={styles.actions}>
-          <Button title="削除" onPress={() => handleDelete(item.id)} variant="danger" style={styles.deleteButton} />
+        <View className="mt-3 flex-row justify-end">
+          <Button title="削除" onPress={() => handleDelete(item.id)} variant="danger" className="px-4 py-2" />
         </View>
       </Card>
     );
   };
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 bg-gray-100">
       {/* カテゴリフィルタ */}
-      <View style={styles.filterContainer}>
+      <View className="flex-row p-4 bg-white border-b border-gray-200">
         <TouchableOpacity
-          style={[styles.filterButton, selectedCategory === 'all' && styles.filterButtonActive]}
+          className={`px-4 py-2 rounded-full mr-2 ${selectedCategory === 'all' ? 'bg-blue-500' : 'bg-gray-200'}`}
           onPress={() => setSelectedCategory('all')}
         >
-          <Text style={[styles.filterText, selectedCategory === 'all' && styles.filterTextActive]}>すべて</Text>
+          <Text className={`text-sm font-semibold ${selectedCategory === 'all' ? 'text-white' : 'text-black'}`}>
+            すべて
+          </Text>
         </TouchableOpacity>
         {STORAGE_CATEGORIES.map(category => (
           <TouchableOpacity
             key={category}
-            style={[styles.filterButton, selectedCategory === category && styles.filterButtonActive]}
+            className={`px-4 py-2 rounded-full mr-2 ${selectedCategory === category ? 'bg-blue-500' : 'bg-gray-200'}`}
             onPress={() => setSelectedCategory(category)}
           >
-            <Text style={[styles.filterText, selectedCategory === category && styles.filterTextActive]}>
+            <Text className={`text-sm font-semibold ${selectedCategory === category ? 'text-white' : 'text-black'}`}>
               {category}
             </Text>
           </TouchableOpacity>
@@ -159,133 +170,15 @@ export default function InventoryScreen() {
         data={filteredIngredients}
         renderItem={renderIngredient}
         keyExtractor={item => item.id}
-        contentContainerStyle={styles.listContainer}
+        className="px-4"
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>食材が登録されていません</Text>
-            <Text style={styles.emptySubtext}>「+」ボタンから食材を追加しましょう</Text>
+          <View className="items-center justify-center py-16">
+            <Text className="text-lg font-semibold text-gray-500 mb-2">食材が登録されていません</Text>
+            <Text className="text-sm text-gray-400">「+」ボタンから食材を追加しましょう</Text>
           </View>
         }
       />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F2F2F7',
-  },
-  filterContainer: {
-    flexDirection: 'row',
-    padding: 16,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E5EA',
-  },
-  filterButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 16,
-    marginRight: 8,
-    backgroundColor: '#E5E5EA',
-  },
-  filterButtonActive: {
-    backgroundColor: '#007AFF',
-  },
-  filterText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#000000',
-  },
-  filterTextActive: {
-    color: '#FFFFFF',
-  },
-  listContainer: {
-    padding: 16,
-  },
-  ingredientHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 8,
-  },
-  ingredientInfo: {
-    flex: 1,
-  },
-  ingredientName: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 8,
-  },
-  badgeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  badge: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
-    marginRight: 8,
-  },
-  badgeText: {
-    color: '#FFFFFF',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  category: {
-    fontSize: 14,
-    color: '#8E8E93',
-  },
-  quantity: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#007AFF',
-  },
-  expiryContainer: {
-    marginTop: 8,
-    marginBottom: 8,
-  },
-  expiryText: {
-    fontSize: 14,
-    color: '#8E8E93',
-  },
-  expiryExpired: {
-    color: '#FF3B30',
-    fontWeight: '600',
-  },
-  expirySoon: {
-    color: '#FF9500',
-    fontWeight: '600',
-  },
-  memo: {
-    fontSize: 14,
-    color: '#8E8E93',
-    marginTop: 8,
-  },
-  actions: {
-    marginTop: 12,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  deleteButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-  emptyContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 64,
-  },
-  emptyText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#8E8E93',
-    marginBottom: 8,
-  },
-  emptySubtext: {
-    fontSize: 14,
-    color: '#C7C7CC',
-  },
-});

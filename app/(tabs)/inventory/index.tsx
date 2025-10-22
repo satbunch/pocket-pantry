@@ -3,9 +3,8 @@
  */
 import { useState, useEffect, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
+import { List, IconButton } from 'react-native-paper';
 import { useFocusEffect } from 'expo-router';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import { deleteIngredient } from '@/services/localStorage/ingredients';
 import type { Ingredient, StorageCategory } from '@/types/ingredient';
 import { mockIngredients } from '@/data/mockIngredients';
@@ -92,53 +91,67 @@ export default function InventoryScreen() {
     }
   };
 
-  // 食材カードのレンダリング
+  // 食材アイテムのレンダリング
   const renderIngredient = ({ item }: { item: Ingredient }) => {
     const expiryStatus = getExpiryStatus(item.expiryDate);
 
-    return (
-      <Card>
-        <View className="flex-row justify-between items-start mb-2">
-          <View className="flex-1">
-            <Text className="text-lg font-semibold mb-2">{item.name}</Text>
-            <View className="flex-row items-center">
-              {item.ingredientStatus !== 'in_stock' && (
-                <View className={`${getStatusBgColor(item.ingredientStatus)} px-2 py-1 rounded mr-2`}>
-                  <Text className="text-white text-xs font-semibold">{getStatusLabel(item.ingredientStatus)}</Text>
-                </View>
-              )}
-              <Text className="text-sm text-gray-500">{item.storageCategory}</Text>
-            </View>
-          </View>
-          <Text className="text-xl font-bold text-blue-600">
-            {item.quantity} {item.unit}
-          </Text>
+    // タイトル部分（食材名 + 保管場所バッジ + ステータスバッジ）
+    const title = (
+      <View className="flex-row items-center">
+        <Text className="text-base font-semibold mr-2">{item.name}</Text>
+        <View className="bg-gray-200 px-2 py-0.5 rounded mr-2">
+          <Text className="text-gray-700 text-xs font-semibold">{item.storageCategory}</Text>
         </View>
-
-        {item.isExpiryManaged && item.expiryDate && (
-          <View className="mt-2">
-            <Text
-              className={`text-sm ${
-                expiryStatus === 'expired'
-                  ? 'text-red-500 font-semibold'
-                  : expiryStatus === 'soon'
-                    ? 'text-orange-500 font-semibold'
-                    : 'text-gray-500'
-              }`}
-            >
-              賞味期限: {item.expiryDate}
-              {expiryStatus === 'expired' && ' (期限切れ)'}
-              {expiryStatus === 'soon' && ' (まもなく期限)'}
-            </Text>
+        {item.ingredientStatus !== 'in_stock' && (
+          <View className={`${getStatusBgColor(item.ingredientStatus)} px-2 py-0.5 rounded`}>
+            <Text className="text-white text-xs font-semibold">{getStatusLabel(item.ingredientStatus)}</Text>
           </View>
         )}
+      </View>
+    );
 
-        {item.memo && <Text className="text-sm text-gray-500 mt-2">{item.memo}</Text>}
+    // 説明部分（賞味期限、メモ）
+    const descriptionLines = [];
 
-        <View className="mt-3 flex-row justify-end">
-          <Button title="削除" onPress={() => handleDelete(item.id)} variant="danger" className="px-4 py-2" />
-        </View>
-      </Card>
+    if (item.isExpiryManaged && item.expiryDate) {
+      const expiryText = `${item.expiryDate}${
+        expiryStatus === 'expired' ? ' (期限切れ)' : expiryStatus === 'soon' ? ' (まもなく期限)' : ''
+      }`;
+      descriptionLines.push(expiryText);
+    }
+
+    if (item.memo) {
+      descriptionLines.push(item.memo);
+    }
+
+    const description = descriptionLines.join('\n');
+
+    // 右側（数量表示）
+    const right = () => (
+      <View className="flex-row items-center">
+        <Text className="text-base font-bold text-blue-600 mr-2">
+          {item.quantity} {item.unit}
+        </Text>
+        <IconButton icon="delete" iconColor="#ef4444" size={20} onPress={() => handleDelete(item.id)} />
+      </View>
+    );
+
+    return (
+      <List.Item
+        title={title}
+        description={description}
+        descriptionNumberOfLines={item.memo ? 4 : 2}
+        right={right}
+        style={{
+          backgroundColor: 'white',
+          borderBottomWidth: 1,
+          borderBottomColor: '#e5e7eb',
+        }}
+        descriptionStyle={{
+          color: expiryStatus === 'expired' ? '#ef4444' : expiryStatus === 'soon' ? '#f97316' : '#6b7280',
+          fontSize: 13,
+        }}
+      />
     );
   };
 

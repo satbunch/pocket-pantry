@@ -129,10 +129,9 @@ export default function InventoryScreen() {
     // 右側（数量表示）
     const right = () => (
       <View className="flex-row items-center">
-        <Text className="text-base font-bold text-blue-600 mr-2">
-          {item.quantity} {item.unit}
-        </Text>
+        <Text className="text-base font-bold text-blue-600 mr-2">{item.quantity}</Text>
         <IconButton icon="delete" iconColor="#ef4444" size={20} onPress={() => handleDelete(item.id)} />
+        <Text className="text-base text-grey-600 mr-2">{item.unit}</Text>
       </View>
     );
 

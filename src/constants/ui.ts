@@ -15,7 +15,16 @@ export const BUTTON_MODE_MAP = {
  * ボタン色マッピング
  */
 export const BUTTON_COLOR_MAP = {
-  primary: undefined, // デフォルトテーマカラー使用
-  secondary: undefined,
+  primary: '#3b82f6', // Tailwind blue-500
+  secondary: undefined, // outlinedモードで青の縁取りとテキスト
   danger: '#EF4444', // Tailwind red-500
+};
+
+/**
+ * アウトラインボタンの縁取り色マッピング
+ */
+export const BUTTON_OUTLINE_COLOR_MAP = {
+  primary: undefined,
+  secondary: '#3b82f6', // Tailwind blue-500
+  danger: undefined,
 };

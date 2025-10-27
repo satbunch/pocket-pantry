@@ -3,14 +3,7 @@
  */
 import { Button as PaperButton } from 'react-native-paper';
 import { BUTTON_MODE_MAP, BUTTON_COLOR_MAP } from '@/constants/ui';
-
-export interface ButtonProps {
-  title: string;
-  onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'danger';
-  disabled?: boolean;
-  className?: string;
-}
+import type { ButtonProps } from '@/types/ui/button';
 
 export function Button({ title, onPress, variant = 'primary', disabled = false, className = '' }: ButtonProps) {
   return (

@@ -3,18 +3,7 @@
  */
 import { View } from 'react-native';
 import { TextInput as PaperTextInput, HelperText } from 'react-native-paper';
-
-export interface InputProps {
-  label: string;
-  value: string;
-  onChangeText: (text: string) => void;
-  placeholder?: string;
-  keyboardType?: 'default' | 'numeric' | 'email-address' | 'phone-pad';
-  multiline?: boolean;
-  numberOfLines?: number;
-  error?: string;
-  className?: string;
-}
+import type { InputProps } from '@/types/ui/input';
 
 export function Input({
   label,

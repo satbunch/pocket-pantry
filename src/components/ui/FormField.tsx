@@ -1,12 +1,5 @@
-import React from 'react';
 import { View, Text } from 'react-native';
-
-interface FormFieldProps {
-  label?: string;
-  error?: string;
-  required?: boolean;
-  children: React.ReactNode;
-}
+import type { FormFieldProps } from '@/types/ui/form';
 
 export function FormField({ error, required, children }: FormFieldProps) {
   return (

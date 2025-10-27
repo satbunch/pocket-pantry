@@ -13,7 +13,8 @@
       "@/types/*": ["./src/types/*"],
       "@/services/*": ["./src/services/*"],
       "@/data/*": ["./src/data/*"],
-      "@/assets/*": ["./assets/*"]
+      "@/assets/*": ["./assets/*"],
+      "@/theme/*": ["./src/theme/*"]
     },
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,

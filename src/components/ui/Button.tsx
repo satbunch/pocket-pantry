@@ -2,6 +2,7 @@
  * ボタンコンポーネント (React Native Paper)
  */
 import { Button as PaperButton } from 'react-native-paper';
+import { BUTTON_MODE_MAP, BUTTON_COLOR_MAP } from '@/constants/ui';
 
 export interface ButtonProps {
   title: string;
@@ -12,24 +13,12 @@ export interface ButtonProps {
 }
 
 export function Button({ title, onPress, variant = 'primary', disabled = false, className = '' }: ButtonProps) {
-  const modeMap = {
-    primary: 'contained' as const,
-    secondary: 'outlined' as const,
-    danger: 'contained' as const,
-  };
-
-  const buttonColorMap = {
-    primary: undefined, // デフォルトテーマカラー使用
-    secondary: undefined,
-    danger: '#EF4444', // Tailwind red-500
-  };
-
   return (
     <PaperButton
-      mode={modeMap[variant]}
+      mode={BUTTON_MODE_MAP[variant]}
       onPress={onPress}
       disabled={disabled}
-      buttonColor={buttonColorMap[variant]}
+      buttonColor={BUTTON_COLOR_MAP[variant]}
       className={className}
     >
       {title}

@@ -8,24 +8,8 @@ import { Input } from '@/components/ui/Input';
 import { Picker } from '@react-native-picker/picker';
 import { Button } from '@/components/ui/Button';
 import { FormField } from '@/components/ui/FormField';
+import { STORAGE_OPTIONS, UNIT_OPTIONS } from '@/constants/ingredient';
 import type { CreateIngredientInput, StorageCategory, UnitType } from '@/types/ingredient';
-
-type PickerOption = { label: string; value: string };
-
-const STORAGE_OPTIONS: PickerOption[] = [
-  { label: '冷蔵', value: '冷蔵' },
-  { label: '冷凍', value: '冷凍' },
-  { label: '常温', value: '常温' },
-  { label: '野菜室', value: '野菜室' },
-];
-
-const UNIT_OPTIONS: PickerOption[] = [
-  { label: '個', value: '個' },
-  { label: 'g', value: 'g' },
-  { label: 'ml', value: 'ml' },
-  { label: '本', value: '本' },
-  { label: '袋', value: '袋' },
-];
 
 export interface IngredientFormProps {
   onSubmit: (input: CreateIngredientInput) => Promise<void>;

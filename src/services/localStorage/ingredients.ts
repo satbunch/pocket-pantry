@@ -2,16 +2,15 @@
  * 食材データのAsyncStorage管理サービス
  */
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { INGREDIENT_STORAGE_KEY } from '@/constants/ingredient';
 import type { Ingredient, CreateIngredientInput, UpdateIngredientInput, IngredientStatus } from '@/types/ingredient';
-
-const STORAGE_KEY = '@PocketPantry:ingredients';
 
 /**
  * 全食材を取得
  */
 export async function getAllIngredients(): Promise<Ingredient[]> {
   try {
-    const jsonValue = await AsyncStorage.getItem(STORAGE_KEY);
+    const jsonValue = await AsyncStorage.getItem(INGREDIENT_STORAGE_KEY);
     return jsonValue != null ? JSON.parse(jsonValue) : [];
   } catch (error) {
     console.error('食材の取得に失敗しました:', error);
@@ -68,7 +67,7 @@ export async function createIngredient(input: CreateIngredientInput): Promise<In
     };
 
     const updated = [...ingredients, newIngredient];
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    await AsyncStorage.setItem(INGREDIENT_STORAGE_KEY, JSON.stringify(updated));
 
     return newIngredient;
   } catch (error) {
@@ -101,7 +100,7 @@ export async function updateIngredient(input: UpdateIngredientInput): Promise<In
     }
 
     ingredients[index] = updated;
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(ingredients));
+    await AsyncStorage.setItem(INGREDIENT_STORAGE_KEY, JSON.stringify(ingredients));
 
     return updated;
   } catch (error) {
@@ -118,7 +117,7 @@ export async function deleteIngredient(id: string): Promise<boolean> {
     const ingredients = await getAllIngredients();
     const filtered = ingredients.filter(ingredient => ingredient.id !== id);
 
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+    await AsyncStorage.setItem(INGREDIENT_STORAGE_KEY, JSON.stringify(filtered));
     return true;
   } catch (error) {
     console.error('食材の削除に失敗しました:', error);
@@ -131,7 +130,7 @@ export async function deleteIngredient(id: string): Promise<boolean> {
  */
 export async function clearAllIngredients(): Promise<void> {
   try {
-    await AsyncStorage.removeItem(STORAGE_KEY);
+    await AsyncStorage.removeItem(INGREDIENT_STORAGE_KEY);
   } catch (error) {
     console.error('食材の全削除に失敗しました:', error);
   }

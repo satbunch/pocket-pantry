@@ -211,28 +211,26 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
               numberOfLines={4}
             />
           </View>
+
+          {/* ボタンエリア */}
+          <View className="flex-row gap-3">
+            <Button
+              title="キャンセル"
+              onPress={onCancel}
+              variant="secondary"
+              className="flex-1"
+              disabled={isSubmitting}
+            />
+            <Button
+              title={isSubmitting ? '登録中...' : '登録'}
+              onPress={handleSubmit}
+              variant="primary"
+              disabled={isSubmitting}
+              className="flex-1"
+            />
+          </View>
         </View>
       </ScrollView>
-
-      {/* 固定ボタンエリア */}
-      <View className="bg-white border-t border-gray-200 px-5 py-4">
-        <View className="flex-row gap-3">
-          <Button
-            title="キャンセル"
-            onPress={onCancel}
-            variant="secondary"
-            className="flex-1"
-            disabled={isSubmitting}
-          />
-          <Button
-            title={isSubmitting ? '登録中...' : '登録'}
-            onPress={handleSubmit}
-            variant="primary"
-            disabled={isSubmitting}
-            className="flex-1"
-          />
-        </View>
-      </View>
     </View>
   );
 }

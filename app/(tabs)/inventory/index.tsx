@@ -1,30 +1,19 @@
 /**
  * 食材管理画面（食材一覧）
  */
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
 import { useFocusEffect } from 'expo-router';
-import { deleteIngredient } from '@/services/localStorage/ingredients';
-import type { Ingredient, StorageCategory } from '@/types/ingredient';
-import { mockIngredients } from '@/data/mockIngredients';
+import { useIngredients } from '@/hooks/useIngredients';
+import type { StorageCategory } from '@/types/ingredient';
 import { IngredientListItem } from './_components/IngredientListItem';
 
 const STORAGE_CATEGORIES: StorageCategory[] = ['冷蔵', '冷凍', '常温', '野菜室'];
 
 export default function InventoryScreen() {
-  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const { ingredients, loadIngredients, deleteIngredient } = useIngredients();
   const [selectedCategory, setSelectedCategory] = useState<StorageCategory | 'all'>('all');
   const [refreshing, setRefreshing] = useState(false);
-
-  // 食材データを読み込み
-  const loadIngredients = useCallback(async () => {
-    const data = mockIngredients;
-    setIngredients(data);
-  }, []);
-
-  useEffect(() => {
-    loadIngredients();
-  }, [loadIngredients]);
 
   // 画面がフォーカスされたときにリロード
   useFocusEffect(
@@ -48,10 +37,7 @@ export default function InventoryScreen() {
 
   // 食材削除
   const handleDelete = async (id: string) => {
-    const success = await deleteIngredient(id);
-    if (success) {
-      await loadIngredients();
-    }
+    await deleteIngredient(id);
   };
 
   return (

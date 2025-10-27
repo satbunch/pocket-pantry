@@ -5,6 +5,7 @@ import { useState, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { useShoppingList } from '@/hooks/useShoppingList';
+import { Input } from '@/components/ui/Input';
 import { ShoppingListItemComponent } from './_components/ShoppingListItem';
 
 export default function ShoppingListScreen() {
@@ -71,62 +72,29 @@ export default function ShoppingListScreen() {
   return (
     <View className="flex-1 bg-gray-50">
       {/* 登録フォーム */}
-      <View className="bg-white border-b border-gray-200 px-4 py-5">
-        <Text className="text-lg font-bold text-gray-800 mb-4">新しい買い物を追加</Text>
+      <View className="bg-white border-b border-gray-200 px-4 py-3">
+        <Text className="text-lg font-bold text-gray-800 mb-3">新しい買い物を追加</Text>
 
-        {/* 食材名入力 */}
-        <View className="mb-4">
-          <Text className="text-sm font-medium text-gray-700 mb-2">
-            食材名 <Text className="text-red-500">*</Text>
-          </Text>
-          <View
-            style={{
-              borderWidth: 1,
-              borderColor: errors.name ? '#ef4444' : '#d1d5db',
-              borderRadius: 8,
-              paddingHorizontal: 12,
-              height: 44,
-              justifyContent: 'center',
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                color: name ? '#111827' : '#9ca3af',
-              }}
-              onLongPress={() => {}} // テキスト選択対応
-            >
-              {name || 'を入力'}
-            </Text>
+        {/* 入力フォーム（横並び） */}
+        <View style={{ flexDirection: 'row', gap: 12, marginBottom: 12 }}>
+          {/* 食材名入力 */}
+          <View className="flex-1">
+            <Input label="食材名" value={name} onChangeText={setName} placeholder="例: 牛乳" error={errors.name} />
+            {errors.name && <Text className="text-xs text-red-500 mt-1">{errors.name}</Text>}
           </View>
-          {errors.name && <Text className="text-xs text-red-500 mt-1">{errors.name}</Text>}
-        </View>
 
-        {/* 数量入力 */}
-        <View className="mb-4">
-          <Text className="text-sm font-medium text-gray-700 mb-2">
-            数量 <Text className="text-red-500">*</Text>
-          </Text>
-          <View
-            style={{
-              borderWidth: 1,
-              borderColor: errors.quantity ? '#ef4444' : '#d1d5db',
-              borderRadius: 8,
-              paddingHorizontal: 12,
-              height: 44,
-              justifyContent: 'center',
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                color: quantity ? '#111827' : '#9ca3af',
-              }}
-            >
-              {quantity || 'を入力'}
-            </Text>
+          {/* 数量入力 */}
+          <View style={{ width: 80 }}>
+            <Input
+              label="数量"
+              value={quantity}
+              onChangeText={setQuantity}
+              placeholder="1"
+              keyboardType="numeric"
+              error={errors.quantity}
+            />
+            {errors.quantity && <Text className="text-xs text-red-500 mt-1">{errors.quantity}</Text>}
           </View>
-          {errors.quantity && <Text className="text-xs text-red-500 mt-1">{errors.quantity}</Text>}
         </View>
 
         {/* 登録ボタン */}
@@ -135,7 +103,7 @@ export default function ShoppingListScreen() {
           disabled={isSubmitting}
           style={{
             backgroundColor: isSubmitting ? '#d1d5db' : '#3b82f6',
-            paddingVertical: 12,
+            paddingVertical: 10,
             borderRadius: 8,
             alignItems: 'center',
           }}

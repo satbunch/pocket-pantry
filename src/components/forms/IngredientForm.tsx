@@ -2,8 +2,9 @@
  * 食材登録フォームコンポーネント
  */
 import { useState, memo } from 'react';
-import { View, Text, Switch, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, Switch, Keyboard, TouchableWithoutFeedback, TouchableOpacity, Platform } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { FormField } from '@/components/ui/FormField';
@@ -47,6 +48,7 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -108,6 +110,17 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
 
   const handleFormTap = () => {
     Keyboard.dismiss();
+  };
+
+  const handleDateChange = (_event: unknown, selectedDate?: Date) => {
+    if (Platform.OS === 'android') {
+      setShowDatePicker(false);
+    }
+
+    if (selectedDate) {
+      const formattedDate = selectedDate.toISOString().split('T')[0];
+      setExpiryDate(formattedDate);
+    }
   };
 
   return (
@@ -242,14 +255,42 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
 
             {isExpiryManaged && (
               <View>
-                <Input
-                  label="賞味期限"
-                  value={expiryDate}
-                  onChangeText={setExpiryDate}
-                  placeholder="2025-12-31"
-                  error={errors.expiryDate}
-                />
-                <Text className="text-xs text-gray-500 mt-1">形式: YYYY-MM-DD</Text>
+                <TouchableOpacity
+                  onPress={() => setShowDatePicker(true)}
+                  style={{
+                    borderWidth: 1,
+                    borderColor: errors.expiryDate ? '#EF4444' : '#D1D5DB',
+                    borderRadius: 8,
+                    paddingHorizontal: 12,
+                    height: 56,
+                    backgroundColor: '#ffffff',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Text style={{ fontSize: 16, color: expiryDate ? '#111827' : '#9ca3af', fontWeight: '500' }}>
+                    {expiryDate || '賞味期限を選択'}
+                  </Text>
+                </TouchableOpacity>
+                {errors.expiryDate && (
+                  <Text style={{ color: '#EF4444', fontSize: 12, marginTop: 4 }}>{errors.expiryDate}</Text>
+                )}
+
+                {showDatePicker && (
+                  <DateTimePicker
+                    value={expiryDate ? new Date(expiryDate) : new Date()}
+                    mode="date"
+                    display={Platform.OS === 'android' ? 'calendar' : 'inline'}
+                    onChange={handleDateChange}
+                  />
+                )}
+
+                {Platform.OS === 'ios' && showDatePicker && (
+                  <View style={{ flexDirection: 'row', justifyContent: 'flex-end', gap: 12, marginTop: 8 }}>
+                    <TouchableOpacity onPress={() => setShowDatePicker(false)}>
+                      <Text style={{ color: '#3b82f6', fontSize: 16, fontWeight: '500' }}>完了</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
               </View>
             )}
 

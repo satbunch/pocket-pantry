@@ -151,3 +151,109 @@ function determineStatus(quantity: number): IngredientStatus {
   if (quantity <= 2) return 'low';
   return 'in_stock';
 }
+
+/**
+ * テスト用データをロード（開発時のみ）
+ */
+export async function loadTestData(): Promise<void> {
+  try {
+    const testIngredients: Ingredient[] = [
+      {
+        id: 'test-1',
+        name: '牛乳',
+        storageCategory: '冷蔵',
+        quantity: 1000,
+        unit: 'ml',
+        ingredientStatus: 'in_stock',
+        isExpiryManaged: true,
+        expiryDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 3日後
+        memo: '',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'test-2',
+        name: 'チーズ',
+        storageCategory: '冷蔵',
+        quantity: 200,
+        unit: 'g',
+        ingredientStatus: 'in_stock',
+        isExpiryManaged: true,
+        expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7日後
+        memo: 'スライスチーズ',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'test-3',
+        name: 'トマト',
+        storageCategory: '野菜室',
+        quantity: 3,
+        unit: '個',
+        ingredientStatus: 'in_stock',
+        isExpiryManaged: true,
+        expiryDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 5日後
+        memo: '',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'test-4',
+        name: '卵',
+        storageCategory: '冷蔵',
+        quantity: 12,
+        unit: '個',
+        ingredientStatus: 'low',
+        isExpiryManaged: true,
+        expiryDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 14日後
+        memo: '',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'test-5',
+        name: 'バター',
+        storageCategory: '冷蔵',
+        quantity: 0,
+        unit: 'g',
+        ingredientStatus: 'out',
+        isExpiryManaged: false,
+        expiryDate: null,
+        memo: '買い置きなし',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'test-6',
+        name: 'パスタ',
+        storageCategory: '常温',
+        quantity: 500,
+        unit: 'g',
+        ingredientStatus: 'in_stock',
+        isExpiryManaged: false,
+        expiryDate: null,
+        memo: '',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'test-7',
+        name: 'りんご',
+        storageCategory: '野菜室',
+        quantity: 4,
+        unit: '個',
+        ingredientStatus: 'in_stock',
+        isExpiryManaged: true,
+        expiryDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 10日後
+        memo: 'フジりんご',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+    ];
+
+    await AsyncStorage.setItem(INGREDIENT_STORAGE_KEY, JSON.stringify(testIngredients));
+    console.log('テストデータをロードしました');
+  } catch (error) {
+    console.error('テストデータのロードに失敗しました:', error);
+  }
+}

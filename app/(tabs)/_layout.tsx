@@ -3,7 +3,7 @@
  */
 import { Tabs } from 'expo-router';
 import { useRouter } from 'expo-router';
-import { List, PlusCircle, ShoppingBasket } from 'lucide-react-native';
+import { List, PlusCircle, ShoppingBasket, Settings } from 'lucide-react-native';
 import { TouchableOpacity } from 'react-native';
 
 export default function TabsLayout() {
@@ -49,14 +49,15 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size }) => <ShoppingBasket color={color} size={size} />,
         }}
       />
-      {/* <Tabs.Screen
+      <Tabs.Screen
         name="settings/index"
         options={{
           title: '設定',
           tabBarLabel: '設定',
           headerTitle: '設定',
+          tabBarIcon: ({ color, size }) => <Settings color={color} size={size} />,
         }}
-      /> */}
+      />
     </Tabs>
   );
 }

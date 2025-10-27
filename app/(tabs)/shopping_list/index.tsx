@@ -2,7 +2,7 @@
  * 買い物リスト画面
  */
 import { useState, useCallback } from 'react';
-import { View, Text, FlatList, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, TextInput, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { useShoppingList } from '@/hooks/useShoppingList';
 import { ShoppingListItemComponent } from './_components/ShoppingListItem';
@@ -74,101 +74,103 @@ export default function ShoppingListScreen() {
   };
 
   return (
-    <View className="flex-1 bg-gray-50">
-      {/* 登録フォーム */}
-      <View className="bg-white border-b border-gray-200 px-4 py-3">
-        <Text className="text-lg font-bold text-gray-800 mb-3">新しい買い物を追加</Text>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View className="flex-1 bg-gray-50">
+        {/* 登録フォーム */}
+        <View className="bg-white border-b border-gray-200 px-4 py-3">
+          <Text className="text-lg font-bold text-gray-800 mb-3">新しい買い物を追加</Text>
 
-        {/* 入力フォーム（横並び） */}
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 8,
-          }}
-        >
-          {/* 食材名入力 */}
-          <TextInput
-            value={name}
-            onChangeText={setName}
-            placeholder="食材名"
-            placeholderTextColor="#d1d5db"
+          {/* 入力フォーム（横並び） */}
+          <View
             style={{
-              flex: 1,
-              borderWidth: 1,
-              borderColor: errors.name ? '#ef4444' : '#d1d5db',
-              borderRadius: 6,
-              paddingHorizontal: 10,
-              paddingVertical: 8,
-              fontSize: 14,
-            }}
-          />
-
-          {/* 数量入力 */}
-          <TextInput
-            value={quantity}
-            onChangeText={setQuantity}
-            placeholder="数量"
-            placeholderTextColor="#d1d5db"
-            keyboardType="numeric"
-            style={{
-              width: 80,
-              borderWidth: 1,
-              borderColor: errors.quantity ? '#ef4444' : '#d1d5db',
-              borderRadius: 6,
-              paddingHorizontal: 10,
-              paddingVertical: 8,
-              fontSize: 14,
-            }}
-          />
-
-          {/* 登録ボタン */}
-          <TouchableOpacity
-            onPress={handleSubmit}
-            disabled={isSubmitting}
-            style={{
-              backgroundColor: isSubmitting ? '#d1d5db' : '#3b82f6',
-              paddingHorizontal: 16,
-              paddingVertical: 8,
-              borderRadius: 6,
+              flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'center',
+              gap: 8,
             }}
-            activeOpacity={0.7}
           >
-            <Text
+            {/* 食材名入力 */}
+            <TextInput
+              value={name}
+              onChangeText={setName}
+              placeholder="食材名"
+              placeholderTextColor="#d1d5db"
               style={{
-                color: '#ffffff',
+                flex: 1,
+                borderWidth: 1,
+                borderColor: errors.name ? '#ef4444' : '#d1d5db',
+                borderRadius: 6,
+                paddingHorizontal: 10,
+                paddingVertical: 8,
                 fontSize: 14,
-                fontWeight: '600',
               }}
+            />
+
+            {/* 数量入力 */}
+            <TextInput
+              value={quantity}
+              onChangeText={setQuantity}
+              placeholder="数量"
+              placeholderTextColor="#d1d5db"
+              keyboardType="numeric"
+              style={{
+                width: 80,
+                borderWidth: 1,
+                borderColor: errors.quantity ? '#ef4444' : '#d1d5db',
+                borderRadius: 6,
+                paddingHorizontal: 10,
+                paddingVertical: 8,
+                fontSize: 14,
+              }}
+            />
+
+            {/* 登録ボタン */}
+            <TouchableOpacity
+              onPress={handleSubmit}
+              disabled={isSubmitting}
+              style={{
+                backgroundColor: isSubmitting ? '#d1d5db' : '#3b82f6',
+                paddingHorizontal: 16,
+                paddingVertical: 8,
+                borderRadius: 6,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              activeOpacity={0.7}
             >
-              {isSubmitting ? '登録...' : '登録'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* エラーメッセージ */}
-        <View style={{ marginTop: 8 }}>
-          {errors.name && <Text style={{ fontSize: 12, color: '#ef4444' }}>{errors.name}</Text>}
-          {errors.quantity && <Text style={{ fontSize: 12, color: '#ef4444' }}>{errors.quantity}</Text>}
-        </View>
-      </View>
-
-      {/* 買い物リスト */}
-      <FlatList
-        data={items}
-        renderItem={({ item }) => (
-          <ShoppingListItemComponent item={item} onDelete={handleDelete} onUpdate={handleUpdate} />
-        )}
-        keyExtractor={item => item.id}
-        ListEmptyComponent={
-          <View className="items-center justify-center py-16">
-            <Text className="text-lg font-semibold text-gray-500 mb-2">買い物リストが空です</Text>
-            <Text className="text-sm text-gray-400">上のフォームから買い物を追加しましょう</Text>
+              <Text
+                style={{
+                  color: '#ffffff',
+                  fontSize: 14,
+                  fontWeight: '600',
+                }}
+              >
+                {isSubmitting ? '登録...' : '登録'}
+              </Text>
+            </TouchableOpacity>
           </View>
-        }
-      />
-    </View>
+
+          {/* エラーメッセージ */}
+          <View style={{ marginTop: 8 }}>
+            {errors.name && <Text style={{ fontSize: 12, color: '#ef4444' }}>{errors.name}</Text>}
+            {errors.quantity && <Text style={{ fontSize: 12, color: '#ef4444' }}>{errors.quantity}</Text>}
+          </View>
+        </View>
+
+        {/* 買い物リスト */}
+        <FlatList
+          data={items}
+          renderItem={({ item }) => (
+            <ShoppingListItemComponent item={item} onDelete={handleDelete} onUpdate={handleUpdate} />
+          )}
+          keyExtractor={item => item.id}
+          ListEmptyComponent={
+            <View className="items-center justify-center py-16">
+              <Text className="text-lg font-semibold text-gray-500 mb-2">買い物リストが空です</Text>
+              <Text className="text-sm text-gray-400">上のフォームから買い物を追加しましょう</Text>
+            </View>
+          }
+        />
+      </View>
+    </TouchableWithoutFeedback>
   );
 }

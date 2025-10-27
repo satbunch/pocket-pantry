@@ -96,3 +96,23 @@ export async function cancelAllNotifications(): Promise<void> {
     console.error('Failed to cancel all notifications:', error);
   }
 }
+
+/**
+ * テスト用：即座に通知を送信
+ */
+export async function sendTestNotification(): Promise<void> {
+  try {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: 'テスト通知',
+        body: 'これはテスト用の通知です',
+        data: {
+          isTest: true,
+        },
+      },
+      trigger: null, // 即座に配信
+    });
+  } catch (error) {
+    console.error('Failed to send test notification:', error);
+  }
+}

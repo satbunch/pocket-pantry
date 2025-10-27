@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Stack, router } from 'expo-router';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, Alert } from 'react-native';
+import * as Notifications from 'expo-notifications';
 import { PaperProvider } from 'react-native-paper';
 import { X } from 'lucide-react-native';
 import { theme } from '@/theme/paper';
@@ -12,6 +13,16 @@ export default function RootLayout() {
   useEffect(() => {
     // 通知ハンドラーを初期化
     setupNotificationHandler();
+
+    // 通知受信時のリスナー
+    const subscription = Notifications.addNotificationReceivedListener(notification => {
+      const { title, body } = notification.request.content;
+      Alert.alert(title || '通知', body || '');
+    });
+
+    return () => {
+      subscription.remove();
+    };
   }, []);
   return (
     <PaperProvider theme={theme}>

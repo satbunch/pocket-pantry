@@ -1,14 +1,25 @@
 /**
  * 設定画面
  */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Switch, Text } from 'react-native-paper';
 import { Button } from '@/components/ui/Button';
 import { loadTestData } from '@/services/localStorage/ingredients';
+import { sendTestNotification } from '@/services/notifications/scheduler';
+import { loadNotificationSettings, setNotificationEnabled } from '@/services/localStorage/notificationSettings';
 
 export default function SettingsScreen() {
   const [isLoading, setIsLoading] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      const settings = await loadNotificationSettings();
+      setNotificationsEnabled(settings.isEnabled);
+    };
+    loadSettings();
+  }, []);
 
   const handleLoadTestData = async () => {
     try {
@@ -23,15 +34,50 @@ export default function SettingsScreen() {
     }
   };
 
+  const handleSendTestNotification = async () => {
+    try {
+      await sendTestNotification();
+      alert('テスト通知を送信しました');
+    } catch (error) {
+      console.error('Failed to send test notification:', error);
+      alert('テスト通知の送信に失敗しました');
+    }
+  };
+
+  const handleToggleNotifications = async (value: boolean) => {
+    try {
+      setNotificationsEnabled(value);
+      await setNotificationEnabled(value);
+    } catch (error) {
+      console.error('Failed to toggle notifications:', error);
+      alert('通知設定の変更に失敗しました');
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ScrollView className="flex-1 bg-white">
         <View className="p-4">
+          {/* 通知設定 */}
+          <View className="mb-6">
+            <Text className="text-base font-semibold text-gray-800 mb-4">通知設定</Text>
+            <View className="flex-row items-center justify-between bg-gray-50 p-4 rounded-lg">
+              <Text className="text-gray-800">賞味期限アラート</Text>
+              <Switch value={notificationsEnabled} onValueChange={handleToggleNotifications} />
+            </View>
+            <Text className="text-xs text-gray-500 mt-2">食材の賞味期限が近いときにお知らせします</Text>
+          </View>
+
           {/* 開発ツール */}
           <View className="mb-6">
             <Text className="text-base font-semibold text-gray-800 mb-4">開発ツール</Text>
             <Button title="テストデータをロード" onPress={handleLoadTestData} disabled={isLoading} variant="primary" />
             <Text className="text-xs text-gray-500 mt-2">AsyncStorageにテスト用の食材データを入れます</Text>
+
+            <View className="mt-4">
+              <Button title="テスト通知を送信" onPress={handleSendTestNotification} variant="primary" />
+              <Text className="text-xs text-gray-500 mt-2">テスト用の通知を即座に送信します</Text>
+            </View>
           </View>
         </View>
       </ScrollView>

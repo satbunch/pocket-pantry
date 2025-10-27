@@ -49,6 +49,9 @@ importers:
       react-native-css-interop:
         specifier: ^0.2.1
         version: 0.2.1(react-native-reanimated@3.17.5(@babel/core@7.28.0)(react-native@0.81.4(@babel/core@7.28.0)(@types/react@19.1.13)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.4.0(react-native@0.81.4(@babel/core@7.28.0)(@types/react@19.1.13)(react@19.1.0))(react@19.1.0))(react-native-svg@15.14.0(react-native@0.81.4(@babel/core@7.28.0)(@types/react@19.1.13)(react@19.1.0))(react@19.1.0))(react-native@0.81.4(@babel/core@7.28.0)(@types/react@19.1.13)(react@19.1.0))(react@19.1.0)(tailwindcss@3.4.18)
+      react-native-dropdown-picker:
+        specifier: ^5.4.6
+        version: 5.4.6(react-native@0.81.4(@babel/core@7.28.0)(@types/react@19.1.13)(react@19.1.0))(react@19.1.0)
       react-native-paper:
         specifier: ^5.14.5
         version: 5.14.5(react-native-safe-area-context@5.4.0(react-native@0.81.4(@babel/core@7.28.0)(@types/react@19.1.13)(react@19.1.0))(react@19.1.0))(react-native@0.81.4(@babel/core@7.28.0)(@types/react@19.1.13)(react@19.1.0))(react@19.1.0)
@@ -3966,6 +3969,13 @@ packages:
         optional: true
       react-native-svg:
         optional: true
+
+  react-native-dropdown-picker@5.4.6:
+    resolution:
+      { integrity: sha512-T1XBHbE++M6aRU3wFYw3MvcOuabhWZ29RK/Ivdls2r1ZkZ62iEBZknLUPeVLMX3x6iUxj4Zgr3X2DGlEGXeHsA== }
+    peerDependencies:
+      react: '*'
+      react-native: '*'
 
   react-native-is-edge-to-edge@1.1.7:
     resolution:
@@ -8509,6 +8519,11 @@ snapshots:
       react-native-svg: 15.14.0(react-native@0.81.4(@babel/core@7.28.0)(@types/react@19.1.13)(react@19.1.0))(react@19.1.0)
     transitivePeerDependencies:
       - supports-color
+
+  react-native-dropdown-picker@5.4.6(react-native@0.81.4(@babel/core@7.28.0)(@types/react@19.1.13)(react@19.1.0))(react@19.1.0):
+    dependencies:
+      react: 19.1.0
+      react-native: 0.81.4(@babel/core@7.28.0)(@types/react@19.1.13)(react@19.1.0)
 
   react-native-is-edge-to-edge@1.1.7(react-native@0.81.4(@babel/core@7.28.0)(@types/react@19.1.13)(react@19.1.0))(react@19.1.0):
     dependencies:

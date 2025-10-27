@@ -1,15 +1,34 @@
 /**
  * 食材登録フォームコンポーネント
  */
-import { useState } from 'react';
-import { View, Text, Switch, ScrollView, Modal, TouchableOpacity } from 'react-native';
+import { useState, memo } from 'react';
+import { View, Text, Switch, ScrollView } from 'react-native';
+import DropDownPicker from 'react-native-dropdown-picker';
 import { Input } from '@/components/ui/Input';
-// import { Picker, type PickerOption } from '@/components/ui/Picker';
-import { Picker } from '@react-native-picker/picker';
 import { Button } from '@/components/ui/Button';
 import { FormField } from '@/components/ui/FormField';
 import { STORAGE_OPTIONS, UNIT_OPTIONS } from '@/constants/ingredient';
 import type { CreateIngredientInput, StorageCategory, UnitType } from '@/types/ingredient';
+
+interface ButtonAreaProps {
+  isSubmitting: boolean;
+  onCancel: () => void;
+  onSubmit: () => void;
+}
+
+const ButtonArea = memo(function ButtonArea({ isSubmitting, onCancel, onSubmit }: ButtonAreaProps) {
+  return (
+    <View style={{ marginTop: 24, flexDirection: 'row', justifyContent: 'flex-end', gap: 12 }}>
+      <Button title="キャンセル" onPress={onCancel} variant="secondary" disabled={isSubmitting} />
+      <Button
+        title={isSubmitting ? '登録中...' : '登録'}
+        onPress={onSubmit}
+        variant="primary"
+        disabled={isSubmitting}
+      />
+    </View>
+  );
+});
 
 export interface IngredientFormProps {
   onSubmit: (input: CreateIngredientInput) => Promise<void>;
@@ -28,7 +47,8 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [pickerVisible, setPickerVisible] = useState(false);
+  const [storageCategoryDropdownOpen, setStorageCategoryDropdownOpen] = useState(false);
+  const [unitDropdownOpen, setUnitDropdownOpen] = useState(false);
 
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -90,10 +110,10 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
 
   return (
     <View className="flex-1 bg-gray-50">
-      <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 100 }}>
-        <View className="p-5 gap-5">
+      <ScrollView className="flex-1" contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }} scrollEnabled={false}>
+        <View className="gap-5 px-4 py-5">
           {/* 基本情報セクション */}
-          <View className="bg-white rounded-xl p-5 shadow-sm">
+          <View className="rounded-xl p-5 shadow-sm">
             <Text className="text-lg font-bold text-gray-800 mb-4">基本情報</Text>
 
             <View className="mb-5">
@@ -104,75 +124,78 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
 
             <View>
               <FormField error={errors.storageCategory} required>
-                <TouchableOpacity
-                  onPress={() => setPickerVisible(true)}
+                <DropDownPicker
+                  open={storageCategoryDropdownOpen}
+                  setOpen={setStorageCategoryDropdownOpen}
+                  value={storageCategory}
+                  setValue={setStorageCategory}
+                  items={STORAGE_OPTIONS.map(option => ({
+                    label: option.label,
+                    value: option.value,
+                  }))}
+                  placeholder="保存場所を選択"
+                  containerStyle={{ marginBottom: 0, zIndex: 1000, height: 56 }}
                   style={{
-                    padding: 12,
-                    borderWidth: 1,
                     borderColor: errors.storageCategory ? '#EF4444' : '#D1D5DB',
-                    borderRadius: 8,
+                    height: 56,
                   }}
-                >
-                  <Text>
-                    {storageCategory
-                      ? STORAGE_OPTIONS.find(option => option.value === storageCategory)?.label
-                      : '保存場所を選択'}
-                  </Text>
-                </TouchableOpacity>
-                <Modal visible={pickerVisible} transparent animationType="slide">
-                  <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.4)' }}>
-                    <View style={{ backgroundColor: 'white' }}>
-                      <Picker
-                        selectedValue={storageCategory}
-                        onValueChange={itemValue => {
-                          setStorageCategory(itemValue);
-                          setPickerVisible(false);
-                        }}
-                      >
-                        {STORAGE_OPTIONS.map(option => (
-                          <Picker.Item key={option.value} label={option.label} value={option.value} />
-                        ))}
-                      </Picker>
-                    </View>
-                  </View>
-                </Modal>
+                  dropDownContainerStyle={{ zIndex: 1000 }}
+                />
               </FormField>
             </View>
           </View>
 
-          {/* 数量セクション */}
-          <View className="bg-white rounded-xl p-5 shadow-sm">
-            <Text className="text-lg font-bold text-gray-800 mb-4">数量</Text>
+          {/* 数量・単位セクション */}
+          <View style={{ flexDirection: 'row', gap: 24 }}>
+            {/* 数量 */}
+            <View className="flex-1 rounded-xl p-5 shadow-sm">
+              <Text className="text-lg font-bold text-gray-800 mb-4">数量</Text>
+              <FormField error={errors.quantity} required>
+                <Input
+                  label="数量"
+                  value={quantity}
+                  onChangeText={setQuantity}
+                  placeholder="1"
+                  keyboardType="numeric"
+                  error={errors.quantity}
+                />
+              </FormField>
+            </View>
 
-            <View className="flex-row gap-4">
-              <View className="flex-1">
-                <FormField error={errors.quantity} required>
-                  <Input
-                    label="数量"
-                    value={quantity}
-                    onChangeText={setQuantity}
-                    placeholder="1"
-                    keyboardType="numeric"
-                    error={errors.quantity}
-                  />
-                </FormField>
-              </View>
-
-              <View className="flex-1">
-                <FormField error={errors.unit} required>
-                  <Picker selectedValue={unit} onValueChange={itemValue => setUnit(itemValue)}>
-                    <Picker.Item label="単位を選択" />
-                    {UNIT_OPTIONS.map(option => (
-                      <Picker.Item key={option.value} label={option.label} value={option.value} />
-                    ))}
-                  </Picker>
-                </FormField>
-              </View>
+            {/* 単位 */}
+            <View className="flex-1 rounded-xl p-5 shadow-sm">
+              <Text className="text-lg font-bold text-gray-800 mb-4">単位</Text>
+              <FormField error={errors.unit} required>
+                <DropDownPicker
+                  open={unitDropdownOpen}
+                  setOpen={setUnitDropdownOpen}
+                  value={unit}
+                  setValue={setUnit}
+                  items={UNIT_OPTIONS.map(option => ({
+                    label: option.label,
+                    value: option.value,
+                  }))}
+                  placeholder="単位を選択"
+                  containerStyle={{ marginBottom: 0, zIndex: 999, height: 56 }}
+                  style={{
+                    borderColor: errors.unit ? '#EF4444' : '#D1D5DB',
+                    height: 56,
+                  }}
+                  dropDownContainerStyle={{ zIndex: 999 }}
+                />
+              </FormField>
             </View>
           </View>
 
           {/* 賞味期限セクション */}
-          <View className="bg-white rounded-xl p-5 shadow-sm">
+          <View
+            style={{
+              borderRadius: 12,
+              paddingVertical: 20,
+              marginTop: 8,
+            }}
+            className="shadow-sm"
+          >
             <View className="flex-row justify-between items-center mb-4">
               <Text className="text-lg font-bold text-gray-800">賞味期限</Text>
               <View className="flex-row items-center gap-3">
@@ -198,7 +221,7 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
           </View>
 
           {/* メモセクション */}
-          <View className="bg-white rounded-xl p-5 shadow-sm">
+          <View className="rounded-xl p-5 shadow-sm">
             <Text className="text-lg font-bold text-gray-800 mb-1">メモ</Text>
             <Text className="text-xs text-gray-500 mb-4">任意</Text>
 
@@ -213,22 +236,7 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
           </View>
 
           {/* ボタンエリア */}
-          <View className="flex-row gap-3">
-            <Button
-              title="キャンセル"
-              onPress={onCancel}
-              variant="secondary"
-              className="flex-1"
-              disabled={isSubmitting}
-            />
-            <Button
-              title={isSubmitting ? '登録中...' : '登録'}
-              onPress={handleSubmit}
-              variant="primary"
-              disabled={isSubmitting}
-              className="flex-1"
-            />
-          </View>
+          <ButtonArea isSubmitting={isSubmitting} onCancel={onCancel} onSubmit={handleSubmit} />
         </View>
       </ScrollView>
     </View>

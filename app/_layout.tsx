@@ -1,12 +1,18 @@
+import { useEffect } from 'react';
 import { Stack, router } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 import { X } from 'lucide-react-native';
 import { theme } from '@/theme/paper';
+import { setupNotificationHandler } from '@/services/notifications/scheduler';
 
 import '../global.css';
 
-export default function rootLayout() {
+export default function RootLayout() {
+  useEffect(() => {
+    // 通知ハンドラーを初期化
+    setupNotificationHandler();
+  }, []);
   return (
     <PaperProvider theme={theme}>
       <Stack

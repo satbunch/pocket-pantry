@@ -85,6 +85,35 @@ export async function updateShoppingListItemStatus(
 }
 
 /**
+ * 買い物リストアイテムを更新
+ */
+export async function updateShoppingListItem(
+  id: string,
+  updates: { name?: string; quantity?: number }
+): Promise<ShoppingListItem | null> {
+  try {
+    const items = await loadShoppingList();
+    const item = items.find(i => i.id === id);
+    if (!item) {
+      return null;
+    }
+
+    if (updates.name !== undefined) {
+      item.name = updates.name;
+    }
+    if (updates.quantity !== undefined) {
+      item.quantity = updates.quantity;
+    }
+    item.updatedAt = new Date().toISOString();
+    await AsyncStorage.setItem(SHOPPING_LIST_STORAGE_KEY, JSON.stringify(items));
+    return item;
+  } catch (error) {
+    console.error('Failed to update shopping list item:', error);
+    throw error;
+  }
+}
+
+/**
  * 買い物リスト全体をクリア
  */
 export async function clearShoppingList(): Promise<void> {

@@ -8,6 +8,7 @@ import {
   addShoppingListItem,
   deleteShoppingListItem,
   updateShoppingListItemStatus,
+  updateShoppingListItem,
 } from '@/services/localStorage/shoppingList';
 
 export function useShoppingList() {
@@ -66,11 +67,27 @@ export function useShoppingList() {
     }
   }, []);
 
+  /**
+   * 買い物リストアイテムを更新
+   */
+  const update = useCallback(async (id: string, updates: { name?: string; quantity?: number }) => {
+    try {
+      const updatedItem = await updateShoppingListItem(id, updates);
+      if (updatedItem) {
+        setItems(prevItems => prevItems.map(item => (item.id === id ? updatedItem : item)));
+      }
+    } catch (error) {
+      console.error('Failed to update item:', error);
+      throw error;
+    }
+  }, []);
+
   return {
     items,
     loadItems: load,
     addItem: add,
     deleteItem: remove,
     updateItemStatus: updateStatus,
+    updateItem: update,
   };
 }

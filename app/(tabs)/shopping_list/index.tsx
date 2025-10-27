@@ -2,14 +2,13 @@
  * 買い物リスト画面
  */
 import { useState, useCallback } from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, TextInput } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { useShoppingList } from '@/hooks/useShoppingList';
-import { Input } from '@/components/ui/Input';
 import { ShoppingListItemComponent } from './_components/ShoppingListItem';
 
 export default function ShoppingListScreen() {
-  const { items, loadItems, addItem, deleteItem } = useShoppingList();
+  const { items, loadItems, addItem, deleteItem, updateItem } = useShoppingList();
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -69,6 +68,11 @@ export default function ShoppingListScreen() {
     await deleteItem(id);
   };
 
+  // アイテム更新
+  const handleUpdate = async (id: string, updates: { name?: string; quantity?: number }) => {
+    await updateItem(id, updates);
+  };
+
   return (
     <View className="flex-1 bg-gray-50">
       {/* 登録フォーム */}
@@ -76,49 +80,87 @@ export default function ShoppingListScreen() {
         <Text className="text-lg font-bold text-gray-800 mb-3">新しい買い物を追加</Text>
 
         {/* 入力フォーム（横並び） */}
-        <View style={{ flexDirection: 'row', gap: 12, marginBottom: 12 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 8,
+          }}
+        >
           {/* 食材名入力 */}
-          <View className="flex-1">
-            <Input label="食材名" value={name} onChangeText={setName} placeholder="例: 牛乳" error={errors.name} />
-            {errors.name && <Text className="text-xs text-red-500 mt-1">{errors.name}</Text>}
-          </View>
+          <TextInput
+            value={name}
+            onChangeText={setName}
+            placeholder="食材名"
+            placeholderTextColor="#d1d5db"
+            style={{
+              flex: 1,
+              borderWidth: 1,
+              borderColor: errors.name ? '#ef4444' : '#d1d5db',
+              borderRadius: 6,
+              paddingHorizontal: 10,
+              paddingVertical: 8,
+              fontSize: 14,
+            }}
+          />
 
           {/* 数量入力 */}
-          <View style={{ width: 80 }}>
-            <Input
-              label="数量"
-              value={quantity}
-              onChangeText={setQuantity}
-              placeholder="1"
-              keyboardType="numeric"
-              error={errors.quantity}
-            />
-            {errors.quantity && <Text className="text-xs text-red-500 mt-1">{errors.quantity}</Text>}
-          </View>
+          <TextInput
+            value={quantity}
+            onChangeText={setQuantity}
+            placeholder="数量"
+            placeholderTextColor="#d1d5db"
+            keyboardType="numeric"
+            style={{
+              width: 80,
+              borderWidth: 1,
+              borderColor: errors.quantity ? '#ef4444' : '#d1d5db',
+              borderRadius: 6,
+              paddingHorizontal: 10,
+              paddingVertical: 8,
+              fontSize: 14,
+            }}
+          />
+
+          {/* 登録ボタン */}
+          <TouchableOpacity
+            onPress={handleSubmit}
+            disabled={isSubmitting}
+            style={{
+              backgroundColor: isSubmitting ? '#d1d5db' : '#3b82f6',
+              paddingHorizontal: 16,
+              paddingVertical: 8,
+              borderRadius: 6,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            activeOpacity={0.7}
+          >
+            <Text
+              style={{
+                color: '#ffffff',
+                fontSize: 14,
+                fontWeight: '600',
+              }}
+            >
+              {isSubmitting ? '登録...' : '登録'}
+            </Text>
+          </TouchableOpacity>
         </View>
 
-        {/* 登録ボタン */}
-        <TouchableOpacity
-          onPress={handleSubmit}
-          disabled={isSubmitting}
-          style={{
-            backgroundColor: isSubmitting ? '#d1d5db' : '#3b82f6',
-            paddingVertical: 10,
-            borderRadius: 8,
-            alignItems: 'center',
-          }}
-          activeOpacity={0.7}
-        >
-          <Text style={{ color: '#ffffff', fontSize: 16, fontWeight: '600' }}>
-            {isSubmitting ? '登録中...' : '登録'}
-          </Text>
-        </TouchableOpacity>
+        {/* エラーメッセージ */}
+        <View style={{ marginTop: 8 }}>
+          {errors.name && <Text style={{ fontSize: 12, color: '#ef4444' }}>{errors.name}</Text>}
+          {errors.quantity && <Text style={{ fontSize: 12, color: '#ef4444' }}>{errors.quantity}</Text>}
+        </View>
       </View>
 
       {/* 買い物リスト */}
       <FlatList
         data={items}
-        renderItem={({ item }) => <ShoppingListItemComponent item={item} onDelete={handleDelete} />}
+        renderItem={({ item }) => (
+          <ShoppingListItemComponent item={item} onDelete={handleDelete} onUpdate={handleUpdate} />
+        )}
         keyExtractor={item => item.id}
         ListEmptyComponent={
           <View className="items-center justify-center py-16">

@@ -3,7 +3,7 @@
  */
 import { useState, memo } from 'react';
 import { View, Text, Switch, Keyboard, TouchableWithoutFeedback } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
+import { Dropdown } from 'react-native-element-dropdown';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { FormField } from '@/components/ui/FormField';
@@ -47,8 +47,6 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [storageCategoryDropdownOpen, setStorageCategoryDropdownOpen] = useState(false);
-  const [unitDropdownOpen, setUnitDropdownOpen] = useState(false);
 
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -108,8 +106,12 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
     }
   };
 
+  const handleFormTap = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    <TouchableWithoutFeedback onPress={handleFormTap}>
       <View className="flex-1 bg-gray-50">
         <View className="gap-5 px-4 py-5">
           {/* 基本情報セクション */}
@@ -124,22 +126,39 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
 
             <View>
               <FormField error={errors.storageCategory} required>
-                <DropDownPicker
-                  open={storageCategoryDropdownOpen}
-                  setOpen={setStorageCategoryDropdownOpen}
-                  value={storageCategory}
-                  setValue={setStorageCategory}
-                  items={STORAGE_OPTIONS.map(option => ({
+                <Dropdown
+                  style={{
+                    borderWidth: 1,
+                    borderColor: errors.storageCategory ? '#EF4444' : '#D1D5DB',
+                    borderRadius: 8,
+                    paddingHorizontal: 12,
+                    height: 56,
+                    backgroundColor: '#ffffff',
+                  }}
+                  placeholderStyle={{
+                    fontSize: 16,
+                    color: '#9ca3af',
+                  }}
+                  selectedTextStyle={{
+                    fontSize: 16,
+                    color: '#111827',
+                    fontWeight: '500',
+                  }}
+                  inputSearchStyle={{
+                    height: 40,
+                    fontSize: 16,
+                  }}
+                  data={STORAGE_OPTIONS.map(option => ({
                     label: option.label,
                     value: option.value,
                   }))}
+                  search={false}
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
                   placeholder="保存場所を選択"
-                  containerStyle={{ marginBottom: 0, zIndex: 1000, height: 56 }}
-                  style={{
-                    borderColor: errors.storageCategory ? '#EF4444' : '#D1D5DB',
-                    height: 56,
-                  }}
-                  dropDownContainerStyle={{ zIndex: 1000 }}
+                  value={storageCategory}
+                  onChange={item => setStorageCategory(item.value)}
                 />
               </FormField>
             </View>
@@ -166,22 +185,39 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
             <View className="flex-1 rounded-xl p-5 shadow-sm">
               <Text className="text-lg font-bold text-gray-800 mb-4">単位</Text>
               <FormField error={errors.unit} required>
-                <DropDownPicker
-                  open={unitDropdownOpen}
-                  setOpen={setUnitDropdownOpen}
-                  value={unit}
-                  setValue={setUnit}
-                  items={UNIT_OPTIONS.map(option => ({
+                <Dropdown
+                  style={{
+                    borderWidth: 1,
+                    borderColor: errors.unit ? '#EF4444' : '#D1D5DB',
+                    borderRadius: 8,
+                    paddingHorizontal: 12,
+                    height: 56,
+                    backgroundColor: '#ffffff',
+                  }}
+                  placeholderStyle={{
+                    fontSize: 16,
+                    color: '#9ca3af',
+                  }}
+                  selectedTextStyle={{
+                    fontSize: 16,
+                    color: '#111827',
+                    fontWeight: '500',
+                  }}
+                  inputSearchStyle={{
+                    height: 40,
+                    fontSize: 16,
+                  }}
+                  data={UNIT_OPTIONS.map(option => ({
                     label: option.label,
                     value: option.value,
                   }))}
+                  search={false}
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
                   placeholder="単位を選択"
-                  containerStyle={{ marginBottom: 0, zIndex: 999, height: 56 }}
-                  style={{
-                    borderColor: errors.unit ? '#EF4444' : '#D1D5DB',
-                    height: 56,
-                  }}
-                  dropDownContainerStyle={{ zIndex: 999 }}
+                  value={unit}
+                  onChange={item => setUnit(item.value)}
                 />
               </FormField>
             </View>

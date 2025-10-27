@@ -3,7 +3,7 @@
  */
 import { useState, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, router } from 'expo-router';
 import { useIngredients } from '@/hooks/useIngredients';
 import type { StorageCategory } from '@/types/ingredient';
 import { IngredientListItem } from './_components/IngredientListItem';
@@ -40,6 +40,11 @@ export default function InventoryScreen() {
     await deleteIngredient(id);
   };
 
+  // 食材編集
+  const handleEdit = (id: string) => {
+    router.push(`/(modals)/edit_ingredient?id=${id}`);
+  };
+
   return (
     <View className="flex-1 bg-gray-100">
       {/* カテゴリフィルタ */}
@@ -68,7 +73,7 @@ export default function InventoryScreen() {
       {/* 食材リスト */}
       <FlatList
         data={filteredIngredients}
-        renderItem={({ item }) => <IngredientListItem item={item} onDelete={handleDelete} />}
+        renderItem={({ item }) => <IngredientListItem item={item} onDelete={handleDelete} onEdit={handleEdit} />}
         keyExtractor={item => item.id}
         className="px-4"
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}

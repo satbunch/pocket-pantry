@@ -2,7 +2,7 @@
  * 食材登録フォームコンポーネント
  */
 import { useState, memo } from 'react';
-import { View, Text, Switch, ScrollView } from 'react-native';
+import { View, Text, Switch } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -110,135 +110,133 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
 
   return (
     <View className="flex-1 bg-gray-50">
-      <ScrollView className="flex-1" contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }} scrollEnabled={false}>
-        <View className="gap-5 px-4 py-5">
-          {/* 基本情報セクション */}
-          <View className="rounded-xl p-5 shadow-sm">
-            <Text className="text-lg font-bold text-gray-800 mb-4">基本情報</Text>
+      <View className="gap-5 px-4 py-5">
+        {/* 基本情報セクション */}
+        <View className="rounded-xl p-5 shadow-sm">
+          <Text className="text-lg font-bold text-gray-800 mb-4">基本情報</Text>
 
-            <View className="mb-5">
-              <FormField error={errors.name} required>
-                <Input label="食材名" value={name} onChangeText={setName} placeholder="例: 牛乳" error={errors.name} />
-              </FormField>
-            </View>
-
-            <View>
-              <FormField error={errors.storageCategory} required>
-                <DropDownPicker
-                  open={storageCategoryDropdownOpen}
-                  setOpen={setStorageCategoryDropdownOpen}
-                  value={storageCategory}
-                  setValue={setStorageCategory}
-                  items={STORAGE_OPTIONS.map(option => ({
-                    label: option.label,
-                    value: option.value,
-                  }))}
-                  placeholder="保存場所を選択"
-                  containerStyle={{ marginBottom: 0, zIndex: 1000, height: 56 }}
-                  style={{
-                    borderColor: errors.storageCategory ? '#EF4444' : '#D1D5DB',
-                    height: 56,
-                  }}
-                  dropDownContainerStyle={{ zIndex: 1000 }}
-                />
-              </FormField>
-            </View>
+          <View className="mb-5">
+            <FormField error={errors.name} required>
+              <Input label="食材名" value={name} onChangeText={setName} placeholder="例: 牛乳" error={errors.name} />
+            </FormField>
           </View>
 
-          {/* 数量・単位セクション */}
-          <View style={{ flexDirection: 'row', gap: 24 }}>
-            {/* 数量 */}
-            <View className="flex-1 rounded-xl p-5 shadow-sm">
-              <Text className="text-lg font-bold text-gray-800 mb-4">数量</Text>
-              <FormField error={errors.quantity} required>
-                <Input
-                  label="数量"
-                  value={quantity}
-                  onChangeText={setQuantity}
-                  placeholder="1"
-                  keyboardType="numeric"
-                  error={errors.quantity}
-                />
-              </FormField>
-            </View>
-
-            {/* 単位 */}
-            <View className="flex-1 rounded-xl p-5 shadow-sm">
-              <Text className="text-lg font-bold text-gray-800 mb-4">単位</Text>
-              <FormField error={errors.unit} required>
-                <DropDownPicker
-                  open={unitDropdownOpen}
-                  setOpen={setUnitDropdownOpen}
-                  value={unit}
-                  setValue={setUnit}
-                  items={UNIT_OPTIONS.map(option => ({
-                    label: option.label,
-                    value: option.value,
-                  }))}
-                  placeholder="単位を選択"
-                  containerStyle={{ marginBottom: 0, zIndex: 999, height: 56 }}
-                  style={{
-                    borderColor: errors.unit ? '#EF4444' : '#D1D5DB',
-                    height: 56,
-                  }}
-                  dropDownContainerStyle={{ zIndex: 999 }}
-                />
-              </FormField>
-            </View>
+          <View>
+            <FormField error={errors.storageCategory} required>
+              <DropDownPicker
+                open={storageCategoryDropdownOpen}
+                setOpen={setStorageCategoryDropdownOpen}
+                value={storageCategory}
+                setValue={setStorageCategory}
+                items={STORAGE_OPTIONS.map(option => ({
+                  label: option.label,
+                  value: option.value,
+                }))}
+                placeholder="保存場所を選択"
+                containerStyle={{ marginBottom: 0, zIndex: 1000, height: 56 }}
+                style={{
+                  borderColor: errors.storageCategory ? '#EF4444' : '#D1D5DB',
+                  height: 56,
+                }}
+                dropDownContainerStyle={{ zIndex: 1000 }}
+              />
+            </FormField>
           </View>
-
-          {/* 賞味期限セクション */}
-          <View
-            style={{
-              borderRadius: 12,
-              paddingVertical: 20,
-              marginTop: 8,
-            }}
-            className="shadow-sm"
-          >
-            <View className="flex-row justify-between items-center mb-4">
-              <Text className="text-lg font-bold text-gray-800">賞味期限</Text>
-              <View className="flex-row items-center gap-3">
-                <Text className="text-sm text-gray-600">{isExpiryManaged ? '管理する' : '管理しない'}</Text>
-                <Switch value={isExpiryManaged} onValueChange={setIsExpiryManaged} />
-              </View>
-            </View>
-
-            {isExpiryManaged && (
-              <View>
-                <Input
-                  label="賞味期限"
-                  value={expiryDate}
-                  onChangeText={setExpiryDate}
-                  placeholder="2025-12-31"
-                  error={errors.expiryDate}
-                />
-                <Text className="text-xs text-gray-500 mt-1">形式: YYYY-MM-DD</Text>
-              </View>
-            )}
-
-            {!isExpiryManaged && <Text className="text-sm text-gray-500 italic">賞味期限は記録されません</Text>}
-          </View>
-
-          {/* メモセクション */}
-          <View className="rounded-xl p-5 shadow-sm">
-            <Text className="text-lg font-bold text-gray-800 mb-1">メモ</Text>
-            <Text className="text-xs text-gray-500 mb-4">任意</Text>
-
-            <Input
-              label="メモ"
-              value={memo}
-              onChangeText={setMemo}
-              placeholder="保存に関するメモなど"
-              multiline
-              numberOfLines={4}
-            />
-          </View>
-
-          {/* ボタンエリア */}
-          <ButtonArea isSubmitting={isSubmitting} onCancel={onCancel} onSubmit={handleSubmit} />
         </View>
-      </ScrollView>
+
+        {/* 数量・単位セクション */}
+        <View style={{ flexDirection: 'row', gap: 24 }}>
+          {/* 数量 */}
+          <View className="flex-1 rounded-xl p-5 shadow-sm">
+            <Text className="text-lg font-bold text-gray-800 mb-4">数量</Text>
+            <FormField error={errors.quantity} required>
+              <Input
+                label="数量"
+                value={quantity}
+                onChangeText={setQuantity}
+                placeholder="1"
+                keyboardType="numeric"
+                error={errors.quantity}
+              />
+            </FormField>
+          </View>
+
+          {/* 単位 */}
+          <View className="flex-1 rounded-xl p-5 shadow-sm">
+            <Text className="text-lg font-bold text-gray-800 mb-4">単位</Text>
+            <FormField error={errors.unit} required>
+              <DropDownPicker
+                open={unitDropdownOpen}
+                setOpen={setUnitDropdownOpen}
+                value={unit}
+                setValue={setUnit}
+                items={UNIT_OPTIONS.map(option => ({
+                  label: option.label,
+                  value: option.value,
+                }))}
+                placeholder="単位を選択"
+                containerStyle={{ marginBottom: 0, zIndex: 999, height: 56 }}
+                style={{
+                  borderColor: errors.unit ? '#EF4444' : '#D1D5DB',
+                  height: 56,
+                }}
+                dropDownContainerStyle={{ zIndex: 999 }}
+              />
+            </FormField>
+          </View>
+        </View>
+
+        {/* 賞味期限セクション */}
+        <View
+          style={{
+            borderRadius: 12,
+            paddingVertical: 20,
+            marginTop: 8,
+          }}
+          className="shadow-sm"
+        >
+          <View className="flex-row justify-between items-center mb-4">
+            <Text className="text-lg font-bold text-gray-800">賞味期限</Text>
+            <View className="flex-row items-center gap-3">
+              <Text className="text-sm text-gray-600">{isExpiryManaged ? '管理する' : '管理しない'}</Text>
+              <Switch value={isExpiryManaged} onValueChange={setIsExpiryManaged} />
+            </View>
+          </View>
+
+          {isExpiryManaged && (
+            <View>
+              <Input
+                label="賞味期限"
+                value={expiryDate}
+                onChangeText={setExpiryDate}
+                placeholder="2025-12-31"
+                error={errors.expiryDate}
+              />
+              <Text className="text-xs text-gray-500 mt-1">形式: YYYY-MM-DD</Text>
+            </View>
+          )}
+
+          {!isExpiryManaged && <Text className="text-sm text-gray-500 italic">賞味期限は記録されません</Text>}
+        </View>
+
+        {/* メモセクション */}
+        <View className="rounded-xl p-5 shadow-sm">
+          <Text className="text-lg font-bold text-gray-800 mb-1">メモ</Text>
+          <Text className="text-xs text-gray-500 mb-4">任意</Text>
+
+          <Input
+            label="メモ"
+            value={memo}
+            onChangeText={setMemo}
+            placeholder="保存に関するメモなど"
+            multiline
+            numberOfLines={4}
+          />
+        </View>
+
+        {/* ボタンエリア */}
+        <ButtonArea isSubmitting={isSubmitting} onCancel={onCancel} onSubmit={handleSubmit} />
+      </View>
     </View>
   );
 }

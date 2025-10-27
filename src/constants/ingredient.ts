@@ -25,7 +25,10 @@ export const STORAGE_OPTIONS: PickerOption[] = [
 export const UNIT_OPTIONS: PickerOption[] = [
   { label: '個', value: '個' },
   { label: 'g', value: 'g' },
+  { label: 'kg', value: 'kg' },
   { label: 'ml', value: 'ml' },
   { label: '本', value: '本' },
   { label: '袋', value: '袋' },
+  { label: 'パック', value: 'パック' },
+  { label: '枚', value: '枚' },
 ];

@@ -6,7 +6,7 @@ export type StorageCategory = '冷蔵' | '冷凍' | '常温' | '野菜室';
 
 export type IngredientStatus = 'in_stock' | 'low' | 'out';
 
-export type UnitType = '個' | 'g' | 'ml' | '本' | '袋';
+export type UnitType = '個' | 'g' | 'kg' | 'ml' | '本' | '袋' | 'パック' | '枚';
 
 export interface Ingredient {
   id: string;

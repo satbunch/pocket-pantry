@@ -25,30 +25,6 @@ export function IngredientListItem({ item, onDelete, onEdit }: IngredientListIte
     return 'ok';
   };
 
-  // ステータスバッジの色
-  const getStatusBgColor = (status: Ingredient['ingredientStatus']) => {
-    switch (status) {
-      case 'in_stock':
-        return 'bg-green-500';
-      case 'low':
-        return 'bg-orange-500';
-      case 'out':
-        return 'bg-red-500';
-    }
-  };
-
-  // ステータスラベル
-  const getStatusLabel = (status: Ingredient['ingredientStatus']) => {
-    switch (status) {
-      case 'in_stock':
-        return 'あり';
-      case 'low':
-        return '残りわずか';
-      case 'out':
-        return 'なし';
-    }
-  };
-
   const expiryStatus = getExpiryStatus(item.expiryDate);
   const expiryText =
     item.isExpiryManaged && item.expiryDate
@@ -66,11 +42,6 @@ export function IngredientListItem({ item, onDelete, onEdit }: IngredientListIte
             <View className="bg-gray-200 px-2 py-0.5 rounded mr-2">
               <Text className="text-gray-700 text-xs font-semibold">{item.storageCategory}</Text>
             </View>
-            {item.ingredientStatus !== 'in_stock' && (
-              <View className={`${getStatusBgColor(item.ingredientStatus)} px-2 py-0.5 rounded`}>
-                <Text className="text-white text-xs font-semibold">{getStatusLabel(item.ingredientStatus)}</Text>
-              </View>
-            )}
           </View>
         }
         description={description}

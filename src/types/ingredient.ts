@@ -4,8 +4,6 @@
 
 export type StorageCategory = '冷蔵' | '冷凍' | '常温' | '野菜室';
 
-export type IngredientStatus = 'in_stock' | 'low' | 'out';
-
 export type UnitType = '個' | 'g' | 'kg' | 'ml' | '本' | '袋' | 'パック' | '枚';
 
 export interface Ingredient {
@@ -14,7 +12,6 @@ export interface Ingredient {
   storageCategory: StorageCategory;
   quantity: number;
   unit: UnitType;
-  ingredientStatus: IngredientStatus;
   isExpiryManaged: boolean;
   expiryDate: string | null; // ISO 8601形式 (YYYY-MM-DD)
   memo: string;
@@ -38,7 +35,6 @@ export interface UpdateIngredientInput {
   storageCategory?: StorageCategory;
   quantity?: number;
   unit?: UnitType;
-  ingredientStatus?: IngredientStatus;
   isExpiryManaged?: boolean;
   expiryDate?: string | null;
   memo?: string;

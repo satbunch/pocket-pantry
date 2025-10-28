@@ -7,6 +7,7 @@ import { useFocusEffect } from 'expo-router';
 import { useShoppingList } from '@/hooks/useShoppingList';
 import { useIngredients } from '@/hooks/useIngredients';
 import { ShoppingListItemComponent } from './_components/ShoppingListItem';
+import { DEFAULT_INCREMENT_AMOUNTS } from '@/constants/ingredient';
 
 export default function ShoppingListScreen() {
   const { items, loadItems, addItem, deleteItem, updateItem, updateItemStatus } = useShoppingList();
@@ -90,6 +91,7 @@ export default function ShoppingListScreen() {
           storageCategory: '冷蔵', // デフォルトは冷蔵
           quantity: item.quantity,
           unit: '個', // デフォルトは個
+          incrementAmount: DEFAULT_INCREMENT_AMOUNTS['個'],
           isExpiryManaged: false,
           expiryDate: null,
           memo: '買い物リストから追加',

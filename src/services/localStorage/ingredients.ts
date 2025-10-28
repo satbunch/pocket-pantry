@@ -2,7 +2,7 @@
  * 食材データのAsyncStorage管理サービス
  */
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { INGREDIENT_STORAGE_KEY } from '@/constants/ingredient';
+import { INGREDIENT_STORAGE_KEY, DEFAULT_INCREMENT_AMOUNTS } from '@/constants/ingredient';
 import type { Ingredient, CreateIngredientInput, UpdateIngredientInput } from '@/types/ingredient';
 
 /**
@@ -58,6 +58,7 @@ export async function createIngredient(input: CreateIngredientInput): Promise<In
       storageCategory: input.storageCategory,
       quantity: input.quantity,
       unit: input.unit,
+      incrementAmount: input.incrementAmount,
       isExpiryManaged: input.isExpiryManaged,
       expiryDate: input.expiryDate,
       memo: input.memo || '',
@@ -149,6 +150,7 @@ export async function loadTestData(): Promise<void> {
         storageCategory: '冷蔵',
         quantity: 1000,
         unit: 'ml',
+        incrementAmount: DEFAULT_INCREMENT_AMOUNTS['ml'],
         isExpiryManaged: true,
         expiryDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 3日後
         memo: '',
@@ -161,6 +163,7 @@ export async function loadTestData(): Promise<void> {
         storageCategory: '冷蔵',
         quantity: 200,
         unit: 'g',
+        incrementAmount: DEFAULT_INCREMENT_AMOUNTS['g'],
         isExpiryManaged: true,
         expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7日後
         memo: 'スライスチーズ',
@@ -173,6 +176,7 @@ export async function loadTestData(): Promise<void> {
         storageCategory: '野菜室',
         quantity: 3,
         unit: '個',
+        incrementAmount: DEFAULT_INCREMENT_AMOUNTS['個'],
         isExpiryManaged: true,
         expiryDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 5日後
         memo: '',
@@ -185,6 +189,7 @@ export async function loadTestData(): Promise<void> {
         storageCategory: '冷蔵',
         quantity: 12,
         unit: '個',
+        incrementAmount: DEFAULT_INCREMENT_AMOUNTS['個'],
         isExpiryManaged: true,
         expiryDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 14日後
         memo: '',
@@ -197,6 +202,7 @@ export async function loadTestData(): Promise<void> {
         storageCategory: '常温',
         quantity: 500,
         unit: 'g',
+        incrementAmount: DEFAULT_INCREMENT_AMOUNTS['g'],
         isExpiryManaged: false,
         expiryDate: null,
         memo: '',
@@ -209,6 +215,7 @@ export async function loadTestData(): Promise<void> {
         storageCategory: '野菜室',
         quantity: 4,
         unit: '個',
+        incrementAmount: DEFAULT_INCREMENT_AMOUNTS['個'],
         isExpiryManaged: true,
         expiryDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 10日後
         memo: 'フジりんご',

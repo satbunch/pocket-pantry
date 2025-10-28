@@ -32,3 +32,17 @@ export const UNIT_OPTIONS: PickerOption[] = [
   { label: 'パック', value: 'パック' },
   { label: '枚', value: '枚' },
 ];
+
+/**
+ * 単位ごとのデフォルト増減量
+ */
+export const DEFAULT_INCREMENT_AMOUNTS: Record<string, number> = {
+  個: 1,
+  g: 100,
+  kg: 1,
+  ml: 100,
+  本: 1,
+  袋: 1,
+  パック: 1,
+  枚: 1,
+};

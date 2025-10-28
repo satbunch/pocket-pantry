@@ -3,6 +3,7 @@
  */
 import { useState, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
+import { Dialog, Portal, Button, Text as PaperText } from 'react-native-paper';
 import { useFocusEffect, router } from 'expo-router';
 import { useIngredients } from '@/hooks/useIngredients';
 import type { StorageCategory } from '@/types/ingredient';
@@ -11,9 +12,12 @@ import { IngredientListItem } from './_components/IngredientListItem';
 const STORAGE_CATEGORIES: StorageCategory[] = ['冷蔵', '冷凍', '常温', '野菜室'];
 
 export default function InventoryScreen() {
-  const { ingredients, loadIngredients, deleteIngredient } = useIngredients();
+  const { ingredients, loadIngredients, deleteIngredient, updateIngredient } = useIngredients();
   const [selectedCategory, setSelectedCategory] = useState<StorageCategory | 'all'>('all');
   const [refreshing, setRefreshing] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [selectedIngredientId, setSelectedIngredientId] = useState<string | null>(null);
+  const [selectedIngredientName, setSelectedIngredientName] = useState<string>('');
 
   // 画面がフォーカスされたときにリロード
   useFocusEffect(
@@ -45,6 +49,44 @@ export default function InventoryScreen() {
     router.push(`/(modals)/edit_ingredient?id=${id}`);
   };
 
+  // 数量変更
+  const handleQuantityChange = async (id: string, newQuantity: number) => {
+    if (newQuantity === 0) {
+      // 0になったら削除確認ダイアログ表示
+      const ingredient = ingredients.find(item => item.id === id);
+      if (ingredient) {
+        setSelectedIngredientId(id);
+        setSelectedIngredientName(ingredient.name);
+        setShowDeleteDialog(true);
+      }
+    } else {
+      // 数量を更新
+      await updateIngredient({ id, quantity: newQuantity });
+      await loadIngredients();
+    }
+  };
+
+  // 削除確認ダイアログ - 終わった
+  const handleDeleteConfirm = async () => {
+    if (selectedIngredientId) {
+      await deleteIngredient(selectedIngredientId);
+      setShowDeleteDialog(false);
+      setSelectedIngredientId(null);
+      setSelectedIngredientName('');
+    }
+  };
+
+  // 削除確認ダイアログ - まだある
+  const handleDeleteCancel = async () => {
+    if (selectedIngredientId) {
+      await updateIngredient({ id: selectedIngredientId, quantity: 0 });
+      await loadIngredients();
+      setShowDeleteDialog(false);
+      setSelectedIngredientId(null);
+      setSelectedIngredientName('');
+    }
+  };
+
   return (
     <View className="flex-1 bg-gray-100">
       {/* カテゴリフィルタ */}
@@ -73,7 +115,14 @@ export default function InventoryScreen() {
       {/* 食材リスト */}
       <FlatList
         data={filteredIngredients}
-        renderItem={({ item }) => <IngredientListItem item={item} onDelete={handleDelete} onEdit={handleEdit} />}
+        renderItem={({ item }) => (
+          <IngredientListItem
+            item={item}
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+            onQuantityChange={handleQuantityChange}
+          />
+        )}
         keyExtractor={item => item.id}
         className="px-4"
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -84,6 +133,20 @@ export default function InventoryScreen() {
           </View>
         }
       />
+
+      {/* 削除確認ダイアログ */}
+      <Portal>
+        <Dialog visible={showDeleteDialog} onDismiss={() => setShowDeleteDialog(false)}>
+          <Dialog.Title>終わった?</Dialog.Title>
+          <Dialog.Content>
+            <PaperText variant="bodyMedium">{selectedIngredientName}を冷蔵庫から削除しますか？</PaperText>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={handleDeleteCancel}>まだある</Button>
+            <Button onPress={handleDeleteConfirm}>終わった</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </View>
   );
 }

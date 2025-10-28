@@ -2,6 +2,7 @@
  * 食材モックデータ
  */
 import type { Ingredient } from '@/types/ingredient';
+import { DEFAULT_INCREMENT_AMOUNTS } from '@/constants/ingredient';
 
 export const mockIngredients: Ingredient[] = [
   {
@@ -10,6 +11,7 @@ export const mockIngredients: Ingredient[] = [
     storageCategory: '冷蔵',
     quantity: 1,
     unit: '本',
+    incrementAmount: DEFAULT_INCREMENT_AMOUNTS['本'],
     isExpiryManaged: true,
     expiryDate: '2025-10-20',
     memo: '低脂肪乳',
@@ -22,6 +24,7 @@ export const mockIngredients: Ingredient[] = [
     storageCategory: '冷蔵',
     quantity: 6,
     unit: '個',
+    incrementAmount: DEFAULT_INCREMENT_AMOUNTS['個'],
     isExpiryManaged: true,
     expiryDate: '2025-10-25',
     memo: '',
@@ -34,6 +37,7 @@ export const mockIngredients: Ingredient[] = [
     storageCategory: '野菜室',
     quantity: 3,
     unit: '本',
+    incrementAmount: DEFAULT_INCREMENT_AMOUNTS['本'],
     isExpiryManaged: false,
     expiryDate: null,
     memo: '有機栽培',
@@ -46,6 +50,7 @@ export const mockIngredients: Ingredient[] = [
     storageCategory: '冷蔵',
     quantity: 300,
     unit: 'g',
+    incrementAmount: DEFAULT_INCREMENT_AMOUNTS['g'],
     isExpiryManaged: true,
     expiryDate: '2025-10-17',
     memo: '生姜焼き用',
@@ -58,6 +63,7 @@ export const mockIngredients: Ingredient[] = [
     storageCategory: '冷凍',
     quantity: 1,
     unit: '袋',
+    incrementAmount: DEFAULT_INCREMENT_AMOUNTS['袋'],
     isExpiryManaged: true,
     expiryDate: '2026-03-15',
     memo: '',
@@ -70,6 +76,7 @@ export const mockIngredients: Ingredient[] = [
     storageCategory: '常温',
     quantity: 1,
     unit: '本',
+    incrementAmount: DEFAULT_INCREMENT_AMOUNTS['本'],
     isExpiryManaged: true,
     expiryDate: '2026-06-30',
     memo: '濃口醤油',
@@ -82,6 +89,7 @@ export const mockIngredients: Ingredient[] = [
     storageCategory: '冷蔵',
     quantity: 2,
     unit: '個',
+    incrementAmount: DEFAULT_INCREMENT_AMOUNTS['個'],
     isExpiryManaged: true,
     expiryDate: '2025-10-18',
     memo: 'プレーン',
@@ -94,6 +102,7 @@ export const mockIngredients: Ingredient[] = [
     storageCategory: '常温',
     quantity: 5,
     unit: '個',
+    incrementAmount: DEFAULT_INCREMENT_AMOUNTS['個'],
     isExpiryManaged: false,
     expiryDate: null,
     memo: '男爵芋',
@@ -106,6 +115,7 @@ export const mockIngredients: Ingredient[] = [
     storageCategory: '野菜室',
     quantity: 1,
     unit: '個',
+    incrementAmount: DEFAULT_INCREMENT_AMOUNTS['個'],
     isExpiryManaged: false,
     expiryDate: null,
     memo: '半分使用済み',
@@ -118,6 +128,7 @@ export const mockIngredients: Ingredient[] = [
     storageCategory: '常温',
     quantity: 1,
     unit: '袋',
+    incrementAmount: DEFAULT_INCREMENT_AMOUNTS['袋'],
     isExpiryManaged: true,
     expiryDate: '2025-10-16',
     memo: '6枚切り（残り2枚）',
@@ -130,6 +141,7 @@ export const mockIngredients: Ingredient[] = [
     storageCategory: '野菜室',
     quantity: 1,
     unit: '個',
+    incrementAmount: DEFAULT_INCREMENT_AMOUNTS['個'],
     isExpiryManaged: false,
     expiryDate: null,
     memo: 'サラダ用',

@@ -1,7 +1,7 @@
 /**
  * 食材リストアイテムコンポーネント
  */
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import { List, IconButton } from 'react-native-paper';
 import type { Ingredient } from '@/types/ingredient';
 
@@ -9,9 +9,10 @@ interface IngredientListItemProps {
   item: Ingredient;
   onDelete: (id: string) => void;
   onEdit?: (id: string) => void;
+  onQuantityChange: (id: string, newQuantity: number) => void;
 }
 
-export function IngredientListItem({ item, onDelete, onEdit }: IngredientListItemProps) {
+export function IngredientListItem({ item, onDelete, onEdit, onQuantityChange }: IngredientListItemProps) {
   // 賞味期限の状態を判定
   const getExpiryStatus = (expiryDate: string | null): 'expired' | 'soon' | 'ok' => {
     if (!expiryDate) return 'ok';
@@ -25,6 +26,16 @@ export function IngredientListItem({ item, onDelete, onEdit }: IngredientListIte
     return 'ok';
   };
 
+  const handleDecrement = () => {
+    const newQuantity = Math.max(0, item.quantity - item.incrementAmount);
+    onQuantityChange(item.id, newQuantity);
+  };
+
+  const handleIncrement = () => {
+    const newQuantity = item.quantity + item.incrementAmount;
+    onQuantityChange(item.id, newQuantity);
+  };
+
   const expiryStatus = getExpiryStatus(item.expiryDate);
   const expiryText =
     item.isExpiryManaged && item.expiryDate
@@ -34,8 +45,9 @@ export function IngredientListItem({ item, onDelete, onEdit }: IngredientListIte
   const descriptionColor = expiryStatus === 'expired' ? '#ef4444' : expiryStatus === 'soon' ? '#f97316' : '#6b7280';
 
   return (
-    <TouchableOpacity onPress={() => onEdit?.(item.id)} activeOpacity={0.7}>
+    <View>
       <List.Item
+        onPress={() => onEdit?.(item.id)}
         title={
           <View className="flex-row items-center">
             <Text className="text-base font-semibold mr-2">{item.name}</Text>
@@ -47,10 +59,18 @@ export function IngredientListItem({ item, onDelete, onEdit }: IngredientListIte
         description={description}
         descriptionNumberOfLines={item.memo ? 4 : 2}
         right={() => (
-          <View className="flex-row items-center">
-            <Text className="text-base font-bold text-blue-600 mr-2">{item.quantity}</Text>
-            <IconButton icon="delete" iconColor="#ef4444" size={20} onPress={() => onDelete(item.id)} />
-            <Text className="text-base text-sm font-bold text-grey-600 mr-2">{item.unit}</Text>
+          <View className="flex-row items-center -mr-3">
+            <IconButton icon="minus" size={16} style={{ margin: 0, marginHorizontal: -4 }} onPress={handleDecrement} />
+            <Text className="text-base font-bold text-blue-600 min-w-[32px] text-center">{item.quantity}</Text>
+            <IconButton icon="plus" size={16} style={{ margin: 0, marginHorizontal: -4 }} onPress={handleIncrement} />
+            <Text className="text-xs font-normal text-gray-500 min-w-[24px] ml-0.5">{item.unit}</Text>
+            <IconButton
+              icon="delete"
+              iconColor="#ef4444"
+              size={20}
+              style={{ margin: 0, marginHorizontal: -8 }}
+              onPress={() => onDelete(item.id)}
+            />
           </View>
         )}
         style={{
@@ -63,6 +83,6 @@ export function IngredientListItem({ item, onDelete, onEdit }: IngredientListIte
           fontSize: 13,
         }}
       />
-    </TouchableOpacity>
+    </View>
   );
 }

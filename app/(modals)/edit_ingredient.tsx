@@ -29,6 +29,7 @@ export default function EditIngredientScreen() {
             storageCategory: ingredient.storageCategory,
             quantity: ingredient.quantity,
             unit: ingredient.unit,
+            incrementAmount: ingredient.incrementAmount,
             isExpiryManaged: ingredient.isExpiryManaged,
             expiryDate: ingredient.expiryDate,
             memo: ingredient.memo,

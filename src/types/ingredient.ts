@@ -12,6 +12,7 @@ export interface Ingredient {
   storageCategory: StorageCategory;
   quantity: number;
   unit: UnitType;
+  incrementAmount: number; // 増減ボタンで増減する量
   isExpiryManaged: boolean;
   expiryDate: string | null; // ISO 8601形式 (YYYY-MM-DD)
   memo: string;
@@ -24,6 +25,7 @@ export interface CreateIngredientInput {
   storageCategory: StorageCategory;
   quantity: number;
   unit: UnitType;
+  incrementAmount: number;
   isExpiryManaged: boolean;
   expiryDate: string | null;
   memo?: string;
@@ -35,6 +37,7 @@ export interface UpdateIngredientInput {
   storageCategory?: StorageCategory;
   quantity?: number;
   unit?: UnitType;
+  incrementAmount?: number;
   isExpiryManaged?: boolean;
   expiryDate?: string | null;
   memo?: string;

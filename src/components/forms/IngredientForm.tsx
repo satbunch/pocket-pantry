@@ -7,8 +7,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { FormField } from '@/components/ui/FormField';
-import { STORAGE_OPTIONS, UNIT_OPTIONS } from '@/constants/ingredient';
+import { STORAGE_OPTIONS, UNIT_OPTIONS, DEFAULT_INCREMENT_AMOUNTS } from '@/constants/ingredient';
 import type { CreateIngredientInput, StorageCategory, UnitType } from '@/types/ingredient';
 
 interface ButtonAreaProps {
@@ -42,6 +41,10 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
   const [storageCategory, setStorageCategory] = useState<string>(initialValues?.storageCategory || '');
   const [quantity, setQuantity] = useState(initialValues?.quantity?.toString() || '');
   const [unit, setUnit] = useState<string>(initialValues?.unit || '');
+  const [incrementAmount, setIncrementAmount] = useState(
+    initialValues?.incrementAmount?.toString() ||
+      (initialValues?.unit ? DEFAULT_INCREMENT_AMOUNTS[initialValues.unit]?.toString() || '1' : '1')
+  );
   const [isExpiryManaged, setIsExpiryManaged] = useState(initialValues?.isExpiryManaged ?? true);
   const [expiryDate, setExpiryDate] = useState(initialValues?.expiryDate || '');
   const [memo, setMemo] = useState(initialValues?.memo || '');
@@ -71,6 +74,12 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
       newErrors.unit = '単位を選択してください';
     }
 
+    if (!incrementAmount.trim()) {
+      newErrors.incrementAmount = '増減量を入力してください';
+    } else if (isNaN(Number(incrementAmount)) || Number(incrementAmount) <= 0) {
+      newErrors.incrementAmount = '増減量は1以上の数値で入力してください';
+    }
+
     if (isExpiryManaged && expiryDate) {
       const date = new Date(expiryDate);
       if (isNaN(date.getTime())) {
@@ -95,6 +104,7 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
         storageCategory: storageCategory as StorageCategory,
         quantity: Number(quantity),
         unit: unit as UnitType,
+        incrementAmount: Number(incrementAmount),
         isExpiryManaged,
         expiryDate: isExpiryManaged && expiryDate ? expiryDate : null,
         memo: memo.trim(),
@@ -106,6 +116,13 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleUnitChange = (selectedUnit: string) => {
+    setUnit(selectedUnit);
+    // 単位が変更された場合、デフォルトの増減量を自動設定
+    const defaultAmount = DEFAULT_INCREMENT_AMOUNTS[selectedUnit] || 1;
+    setIncrementAmount(defaultAmount.toString());
   };
 
   const handleFormTap = () => {
@@ -132,48 +149,44 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
             <Text className="text-lg font-bold text-gray-800 mb-4">基本情報</Text>
 
             <View className="mb-5">
-              <FormField error={errors.name} required>
-                <Input label="食材名" value={name} onChangeText={setName} placeholder="例: 牛乳" error={errors.name} />
-              </FormField>
+              <Input label="食材名" value={name} onChangeText={setName} placeholder="例: 牛乳" error={errors.name} />
             </View>
 
             <View>
-              <FormField error={errors.storageCategory} required>
-                <Dropdown
-                  style={{
-                    borderWidth: 1,
-                    borderColor: errors.storageCategory ? '#EF4444' : '#D1D5DB',
-                    borderRadius: 8,
-                    paddingHorizontal: 12,
-                    height: 56,
-                    backgroundColor: '#ffffff',
-                  }}
-                  placeholderStyle={{
-                    fontSize: 16,
-                    color: '#9ca3af',
-                  }}
-                  selectedTextStyle={{
-                    fontSize: 16,
-                    color: '#111827',
-                    fontWeight: '500',
-                  }}
-                  inputSearchStyle={{
-                    height: 40,
-                    fontSize: 16,
-                  }}
-                  data={STORAGE_OPTIONS.map(option => ({
-                    label: option.label,
-                    value: option.value,
-                  }))}
-                  search={false}
-                  maxHeight={300}
-                  labelField="label"
-                  valueField="value"
-                  placeholder="保存場所を選択"
-                  value={storageCategory}
-                  onChange={item => setStorageCategory(item.value)}
-                />
-              </FormField>
+              <Dropdown
+                style={{
+                  borderWidth: 1,
+                  borderColor: errors.storageCategory ? '#EF4444' : '#D1D5DB',
+                  borderRadius: 8,
+                  paddingHorizontal: 12,
+                  height: 56,
+                  backgroundColor: '#ffffff',
+                }}
+                placeholderStyle={{
+                  fontSize: 16,
+                  color: '#9ca3af',
+                }}
+                selectedTextStyle={{
+                  fontSize: 16,
+                  color: '#111827',
+                  fontWeight: '500',
+                }}
+                inputSearchStyle={{
+                  height: 40,
+                  fontSize: 16,
+                }}
+                data={STORAGE_OPTIONS.map(option => ({
+                  label: option.label,
+                  value: option.value,
+                }))}
+                search={false}
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder="保存場所を選択"
+                value={storageCategory}
+                onChange={item => setStorageCategory(item.value)}
+              />
             </View>
           </View>
 
@@ -182,57 +195,68 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
             {/* 数量 */}
             <View className="flex-1 rounded-xl p-5 shadow-sm">
               <Text className="text-lg font-bold text-gray-800 mb-4">数量</Text>
-              <FormField error={errors.quantity} required>
-                <Input
-                  label="数量"
-                  value={quantity}
-                  onChangeText={setQuantity}
-                  placeholder="1"
-                  keyboardType="numeric"
-                  error={errors.quantity}
-                />
-              </FormField>
+              <Input
+                label="数量"
+                value={quantity}
+                onChangeText={setQuantity}
+                placeholder="1"
+                keyboardType="numeric"
+                error={errors.quantity}
+              />
             </View>
 
             {/* 単位 */}
             <View className="flex-1 rounded-xl p-5 shadow-sm">
               <Text className="text-lg font-bold text-gray-800 mb-4">単位</Text>
-              <FormField error={errors.unit} required>
-                <Dropdown
-                  style={{
-                    borderWidth: 1,
-                    borderColor: errors.unit ? '#EF4444' : '#D1D5DB',
-                    borderRadius: 8,
-                    paddingHorizontal: 12,
-                    height: 56,
-                    backgroundColor: '#ffffff',
-                  }}
-                  placeholderStyle={{
-                    fontSize: 16,
-                    color: '#9ca3af',
-                  }}
-                  selectedTextStyle={{
-                    fontSize: 16,
-                    color: '#111827',
-                    fontWeight: '500',
-                  }}
-                  inputSearchStyle={{
-                    height: 40,
-                    fontSize: 16,
-                  }}
-                  data={UNIT_OPTIONS.map(option => ({
-                    label: option.label,
-                    value: option.value,
-                  }))}
-                  search={false}
-                  maxHeight={300}
-                  labelField="label"
-                  valueField="value"
-                  placeholder="単位を選択"
-                  value={unit}
-                  onChange={item => setUnit(item.value)}
-                />
-              </FormField>
+              <Dropdown
+                style={{
+                  borderWidth: 1,
+                  borderColor: errors.unit ? '#EF4444' : '#D1D5DB',
+                  borderRadius: 8,
+                  paddingHorizontal: 12,
+                  height: 56,
+                  backgroundColor: '#ffffff',
+                }}
+                placeholderStyle={{
+                  fontSize: 16,
+                  color: '#9ca3af',
+                }}
+                selectedTextStyle={{
+                  fontSize: 16,
+                  color: '#111827',
+                  fontWeight: '500',
+                }}
+                inputSearchStyle={{
+                  height: 40,
+                  fontSize: 16,
+                }}
+                data={UNIT_OPTIONS.map(option => ({
+                  label: option.label,
+                  value: option.value,
+                }))}
+                search={false}
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder="単位を選択"
+                value={unit}
+                onChange={item => handleUnitChange(item.value)}
+              />
+            </View>
+          </View>
+
+          {/* 増減量セクション */}
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <View style={{ width: '50%' }} className="rounded-xl p-5 shadow-sm">
+              <Text className="text-lg font-bold text-gray-800 mb-4">増減量</Text>
+              <Input
+                label="増減量"
+                value={incrementAmount}
+                onChangeText={setIncrementAmount}
+                placeholder="1"
+                keyboardType="numeric"
+                error={errors.incrementAmount}
+              />
             </View>
           </View>
 

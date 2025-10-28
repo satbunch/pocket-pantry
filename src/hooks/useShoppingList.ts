@@ -9,6 +9,7 @@ import {
   deleteShoppingListItem,
   updateShoppingListItemStatus,
   updateShoppingListItem,
+  cleanupCompletedItems,
 } from '@/services/localStorage/shoppingList';
 
 export function useShoppingList() {
@@ -16,9 +17,13 @@ export function useShoppingList() {
 
   /**
    * 買い物リストを読み込む
+   * 24時間以上経過した購入済みアイテムを自動削除
    */
   const load = useCallback(async () => {
     try {
+      // 古い購入済みアイテムをクリーンアップ
+      await cleanupCompletedItems();
+      // リストを読み込む
       const loadedItems = await loadShoppingList();
       setItems(loadedItems);
     } catch (error) {

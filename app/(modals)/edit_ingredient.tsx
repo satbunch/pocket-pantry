@@ -58,21 +58,11 @@ export default function EditIngredientScreen() {
     router.back();
   };
 
-  if (isLoading) {
-    return (
-      <View className="flex-1 justify-center items-center bg-white">
-        <ActivityIndicator size="large" color="#3b82f6" />
-      </View>
-    );
-  }
-
-  if (!initialValues) {
-    return (
-      <View className="flex-1 justify-center items-center bg-white">
-        <ActivityIndicator size="large" color="#3b82f6" />
-      </View>
-    );
-  }
-
-  return <IngredientForm onSubmit={handleSubmit} onCancel={handleCancel} initialValues={initialValues} />;
+  return isLoading || !initialValues ? (
+    <View className="flex-1 justify-center items-center bg-white">
+      <ActivityIndicator size="large" color="#3b82f6" />
+    </View>
+  ) : (
+    <IngredientForm onSubmit={handleSubmit} onCancel={handleCancel} initialValues={initialValues} />
+  );
 }

@@ -124,3 +124,32 @@ export async function clearShoppingList(): Promise<void> {
     throw error;
   }
 }
+
+/**
+ * 購入済みで24時間以上経過したアイテムを削除
+ */
+export async function cleanupCompletedItems(): Promise<void> {
+  try {
+    const items = await loadShoppingList();
+    const now = new Date().getTime();
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24時間（ミリ秒）
+
+    // 購入済みで24時間以上経過したアイテムを除外
+    const filteredItems = items.filter(item => {
+      if (item.status !== 'completed') {
+        return true; // 未購入アイテムは保持
+      }
+      const updatedAt = new Date(item.updatedAt).getTime();
+      const elapsed = now - updatedAt;
+      return elapsed < twentyFourHours; // 24時間未満のものは保持
+    });
+
+    // 削除されたアイテムがある場合のみ保存
+    if (filteredItems.length !== items.length) {
+      await AsyncStorage.setItem(SHOPPING_LIST_STORAGE_KEY, JSON.stringify(filteredItems));
+      console.log(`Cleaned up ${items.length - filteredItems.length} completed items`);
+    }
+  } catch (error) {
+    console.error('Failed to cleanup completed items:', error);
+  }
+}

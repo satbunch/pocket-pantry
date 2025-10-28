@@ -5,10 +5,12 @@ import { useState, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity, TextInput, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { useShoppingList } from '@/hooks/useShoppingList';
+import { useIngredients } from '@/hooks/useIngredients';
 import { ShoppingListItemComponent } from './_components/ShoppingListItem';
 
 export default function ShoppingListScreen() {
-  const { items, loadItems, addItem, deleteItem, updateItem } = useShoppingList();
+  const { items, loadItems, addItem, deleteItem, updateItem, updateItemStatus } = useShoppingList();
+  const { addIngredient } = useIngredients();
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -72,6 +74,41 @@ export default function ShoppingListScreen() {
   const handleUpdate = async (id: string, updates: { name?: string; quantity?: number }) => {
     await updateItem(id, updates);
   };
+
+  // チェックボックストグル（購入済み⇄未購入）
+  const handleToggleStatus = async (id: string) => {
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+
+    const newStatus = item.status === 'completed' ? 'pending' : 'completed';
+
+    // チェックを入れた場合（購入済みにする場合）、食材在庫に追加
+    if (newStatus === 'completed') {
+      try {
+        await addIngredient({
+          name: item.name,
+          storageCategory: '冷蔵', // デフォルトは冷蔵
+          quantity: item.quantity,
+          unit: '個', // デフォルトは個
+          isExpiryManaged: false,
+          expiryDate: null,
+          memo: '買い物リストから追加',
+        });
+      } catch (error) {
+        console.error('Failed to add ingredient:', error);
+      }
+    }
+
+    // ステータスを更新
+    await updateItemStatus(id, newStatus);
+  };
+
+  // 購入済み/未購入でソート（未購入が上、購入済みが下）
+  const sortedItems = [...items].sort((a, b) => {
+    if (a.status === 'completed' && b.status === 'pending') return 1;
+    if (a.status === 'pending' && b.status === 'completed') return -1;
+    return 0;
+  });
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -158,9 +195,14 @@ export default function ShoppingListScreen() {
 
         {/* 買い物リスト */}
         <FlatList
-          data={items}
+          data={sortedItems}
           renderItem={({ item }) => (
-            <ShoppingListItemComponent item={item} onDelete={handleDelete} onUpdate={handleUpdate} />
+            <ShoppingListItemComponent
+              item={item}
+              onDelete={handleDelete}
+              onUpdate={handleUpdate}
+              onToggleStatus={handleToggleStatus}
+            />
           )}
           keyExtractor={item => item.id}
           ListEmptyComponent={

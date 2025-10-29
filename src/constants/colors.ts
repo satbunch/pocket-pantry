@@ -93,6 +93,16 @@ export const COLORS_BACKGROUND = {
 };
 
 /**
+ * 保管場所別のバッジカラー
+ */
+export const STORAGE_CATEGORY_COLORS = {
+  冷蔵: COLORS_PRIMARY[500], // Blue
+  冷凍: '#06b6d4', // Cyan
+  常温: COLORS_WARNING[500], // Amber
+  野菜室: COLORS_SECONDARY[500], // Emerald
+} as const;
+
+/**
  * よく使う色のショートカット
  */
 export const COLORS = {

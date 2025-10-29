@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Calendar } from 'lucide-react-native';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { THEME_COLORS } from '@/theme/colors';
@@ -35,8 +36,11 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
     initialValues?.incrementAmount?.toString() ||
       (initialValues?.unit ? DEFAULT_INCREMENT_AMOUNTS[initialValues.unit]?.toString() || '1' : '1')
   );
-  const [isExpiryManaged, setIsExpiryManaged] = useState(initialValues?.isExpiryManaged ?? true);
-  const [expiryDate, setExpiryDate] = useState(initialValues?.expiryDate || '');
+  const [isExpiryManaged, setIsExpiryManaged] = useState(initialValues?.isExpiryManaged ?? false);
+  const [expiryDate, setExpiryDate] = useState(
+    initialValues?.expiryDate ||
+      (!(initialValues?.isExpiryManaged ?? false) ? new Date().toISOString().split('T')[0] : '')
+  );
   const [memo, setMemo] = useState(initialValues?.memo || '');
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -135,15 +139,14 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
       <ScrollView contentContainerStyle={{ paddingVertical: 20 }} keyboardShouldPersistTaps="handled">
         <TouchableWithoutFeedback onPress={handleFormTap}>
           <View className="px-4">
-            {/* 食材名セクション */}
-            <View>
-              <Text className="text-sm text-gray-800 mb-2">食材名</Text>
-
+            {/* 食材名・保管場所セクション */}
+            <View className="mb-2 rounded-xl p-5 shadow-sm">
               <View>
+                <Text className="text-sm text-gray-800 mb-2">食材名</Text>
                 <Input value={name} onChangeText={setName} placeholder="例: 牛乳" error={errors.name} />
               </View>
 
-              <View>
+              <View className="mt-3">
                 <Text className="text-sm text-gray-800 mb-2">保管場所</Text>
                 <Dropdown
                   style={{
@@ -151,7 +154,7 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
                     borderColor: errors.storageCategory ? THEME_COLORS.ui.borderError : THEME_COLORS.ui.border,
                     borderRadius: 8,
                     paddingHorizontal: 12,
-                    height: 56,
+                    height: 42,
                     backgroundColor: THEME_COLORS.ui.background,
                   }}
                   placeholderStyle={{
@@ -163,16 +166,12 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
                     color: THEME_COLORS.ui.textPrimary,
                     fontWeight: '500',
                   }}
-                  inputSearchStyle={{
-                    height: 40,
-                    fontSize: 16,
-                  }}
                   data={STORAGE_OPTIONS.map(option => ({
                     label: option.label,
                     value: option.value,
                   }))}
                   search={false}
-                  maxHeight={300}
+                  maxHeight={200}
                   labelField="label"
                   valueField="value"
                   placeholder="保存場所を選択"
@@ -183,7 +182,7 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
             </View>
 
             {/* 数量・単位セクション */}
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row', marginBottom: 8 }}>
               {/* 数量 */}
               <View className="flex-1 rounded-xl p-5 shadow-sm" style={{ marginRight: 24 }}>
                 <Text className="text-sm text-gray-800 mb-2">数量</Text>
@@ -205,7 +204,7 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
                     borderColor: errors.unit ? THEME_COLORS.ui.borderError : THEME_COLORS.ui.border,
                     borderRadius: 8,
                     paddingHorizontal: 12,
-                    height: 56,
+                    height: 42,
                     backgroundColor: THEME_COLORS.ui.background,
                   }}
                   placeholderStyle={{
@@ -251,15 +250,10 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
             </View>
 
             {/* 賞味期限セクション */}
-            <View className="rounded-xl p-5 shadow-sm">
-              <View className="flex-row items-center mb-4">
-                <Text className="text-lg text-gray-800 mr-2">賞味期限</Text>
-                <Text className="text-sm text-gray-600 mr-1">{isExpiryManaged ? '管理する' : '管理しない'}</Text>
-                <Switch value={isExpiryManaged} onValueChange={setIsExpiryManaged} />
-              </View>
-
-              {isExpiryManaged && (
-                <View>
+            <View className="mb-2">
+              <Text className="text-sm text-gray-800 mb-2">賞味期限</Text>
+              <View className="flex-row items-center">
+                <View style={{ width: '48%', marginRight: 24 }} className="rounded-xl p-5 shadow-sm">
                   <TouchableOpacity
                     onPress={() => setShowDatePicker(true)}
                     style={{
@@ -267,37 +261,44 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
                       borderColor: errors.expiryDate ? THEME_COLORS.ui.borderError : THEME_COLORS.ui.border,
                       borderRadius: 8,
                       paddingHorizontal: 12,
-                      height: 56,
+                      height: 42,
                       backgroundColor: THEME_COLORS.ui.background,
                       justifyContent: 'center',
+                      flexDirection: 'row',
+                      alignItems: 'center',
                     }}
                   >
                     <Text
                       style={{
+                        flex: 1,
                         fontSize: 16,
-                        color: expiryDate ? THEME_COLORS.ui.textPrimary : THEME_COLORS.ui.textMuted,
+                        color: !isExpiryManaged && expiryDate ? THEME_COLORS.ui.textPrimary : THEME_COLORS.ui.textMuted,
                         fontWeight: '500',
                       }}
                     >
-                      {expiryDate || new Date().toISOString().split('T')[0]}
+                      {!isExpiryManaged ? expiryDate || new Date().toISOString().split('T')[0] : '賞味期限なし'}
                     </Text>
+                    <Calendar size={20} color={THEME_COLORS.ui.icon} />
                   </TouchableOpacity>
-                  {errors.expiryDate && (
-                    <Text style={{ color: THEME_COLORS.status.expired, fontSize: 12, marginTop: 4 }}>
-                      {errors.expiryDate}
-                    </Text>
-                  )}
+                </View>
+                <View className="flex-row items-center">
+                  <View className="mr-2">
+                    <Text className="text-xs text-gray-600">賞味期限を</Text>
+                    <Text className="text-xs text-gray-600">管理しない</Text>
+                  </View>
+                  <Switch value={isExpiryManaged} onValueChange={setIsExpiryManaged} />
+                </View>
+              </View>
+              {showDatePicker && (
+                <View>
+                  <DateTimePicker
+                    value={expiryDate ? new Date(expiryDate) : new Date()}
+                    mode="date"
+                    display={Platform.OS === 'android' ? 'calendar' : 'inline'}
+                    onChange={handleDateChange}
+                  />
 
-                  {showDatePicker && (
-                    <DateTimePicker
-                      value={expiryDate ? new Date(expiryDate) : new Date()}
-                      mode="date"
-                      display={Platform.OS === 'android' ? 'calendar' : 'inline'}
-                      onChange={handleDateChange}
-                    />
-                  )}
-
-                  {Platform.OS === 'ios' && showDatePicker && (
+                  {Platform.OS === 'ios' && (
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: 8 }}>
                       <TouchableOpacity onPress={() => setShowDatePicker(false)}>
                         <Text style={{ color: THEME_COLORS.ui.buttonPrimary, fontSize: 16, fontWeight: '500' }}>
@@ -309,7 +310,11 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
                 </View>
               )}
 
-              {!isExpiryManaged && <Text className="text-sm text-gray-500 italic mb-4">賞味期限は記録されません</Text>}
+              {!isExpiryManaged && errors.expiryDate && (
+                <Text style={{ color: THEME_COLORS.status.expired, fontSize: 12, marginTop: 4 }}>
+                  {errors.expiryDate}
+                </Text>
+              )}
             </View>
 
             {/* メモセクション */}

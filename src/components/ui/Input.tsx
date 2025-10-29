@@ -34,10 +34,12 @@ export function Input({
           borderColor: error ? THEME_COLORS.ui.borderError : THEME_COLORS.ui.border,
           borderRadius: 8,
           paddingHorizontal: 12,
+          height: multiline ? numberOfLines * 20 + 10 : 42,
           backgroundColor: THEME_COLORS.ui.background,
         }}
         containerStyle={{
           paddingHorizontal: 0,
+          marginBottom: error ? undefined : -14,
         }}
         labelStyle={{
           fontSize: 16,

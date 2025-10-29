@@ -333,7 +333,7 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
                 <Button title="キャンセル" onPress={onCancel} variant="secondary" disabled={isSubmitting} />
               </View>
               <Button
-                title={isSubmitting ? '登録中...' : '登録'}
+                title={isSubmitting ? (initialValues ? '更新中...' : '登録中...') : initialValues ? '更新' : '登録'}
                 onPress={handleSubmit}
                 variant="primary"
                 disabled={isSubmitting}

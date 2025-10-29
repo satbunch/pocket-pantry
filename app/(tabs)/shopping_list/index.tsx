@@ -124,7 +124,6 @@ export default function ShoppingListScreen() {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              gap: 8,
             }}
           >
             {/* 食材名入力 */}
@@ -141,6 +140,7 @@ export default function ShoppingListScreen() {
                 paddingHorizontal: 10,
                 paddingVertical: 8,
                 fontSize: 14,
+                marginRight: 8,
               }}
             />
 
@@ -159,6 +159,7 @@ export default function ShoppingListScreen() {
                 paddingHorizontal: 10,
                 paddingVertical: 8,
                 fontSize: 14,
+                marginRight: 8,
               }}
             />
 

@@ -31,7 +31,6 @@ export function ShoppingListItemEdit({
         backgroundColor: '#ffffff',
         borderBottomWidth: 1,
         borderBottomColor: '#e5e7eb',
-        gap: 8,
       }}
     >
       {/* 食材名入力 */}
@@ -47,6 +46,7 @@ export function ShoppingListItemEdit({
           paddingHorizontal: 10,
           paddingVertical: 8,
           fontSize: 14,
+          marginRight: 8,
         }}
       />
 
@@ -64,11 +64,17 @@ export function ShoppingListItemEdit({
           paddingHorizontal: 10,
           paddingVertical: 8,
           fontSize: 14,
+          marginRight: 8,
         }}
       />
 
       {/* 保存ボタン */}
-      <TouchableOpacity onPress={onSave} className="p-2 rounded-full active:bg-green-50" activeOpacity={0.7}>
+      <TouchableOpacity
+        onPress={onSave}
+        className="p-2 rounded-full active:bg-green-50"
+        activeOpacity={0.7}
+        style={{ marginRight: 8 }}
+      >
         <Save size={20} color="#22c55e" />
       </TouchableOpacity>
 

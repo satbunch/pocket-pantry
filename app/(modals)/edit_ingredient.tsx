@@ -3,8 +3,9 @@
  */
 import { useLocalSearchParams, router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { View, ActivityIndicator } from 'react-native';
-import { Dialog, Portal, Button, Text } from 'react-native-paper';
+import { View, ActivityIndicator, Text } from 'react-native';
+import { Overlay } from '@rneui/themed';
+import { Button } from '@/components/ui/Button';
 import { IngredientForm } from '@/components/forms/IngredientForm';
 import { useIngredients } from '@/hooks/useIngredients';
 import { getIngredientById } from '@/services/localStorage/ingredients';
@@ -103,18 +104,20 @@ export default function EditIngredientScreen() {
   ) : (
     <>
       <IngredientForm onSubmit={handleSubmit} onCancel={handleCancel} initialValues={initialValues} />
-      <Portal>
-        <Dialog visible={showDeleteDialog} onDismiss={() => setShowDeleteDialog(false)}>
-          <Dialog.Title>終わった?</Dialog.Title>
-          <Dialog.Content>
-            <Text variant="bodyMedium">{initialValues.name}を冷蔵庫から削除しますか？</Text>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={handleDeleteCancel}>まだある</Button>
-            <Button onPress={handleDeleteConfirm}>終わった</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
+      <Overlay isVisible={showDeleteDialog} onBackdropPress={() => setShowDeleteDialog(false)}>
+        <View style={{ padding: 20, minWidth: 280 }}>
+          <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 16 }}>終わった?</Text>
+          <Text style={{ fontSize: 16, marginBottom: 24, color: '#374151' }}>
+            {initialValues.name}を冷蔵庫から削除しますか？
+          </Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <View style={{ marginRight: 12 }}>
+              <Button title="まだある" onPress={handleDeleteCancel} variant="secondary" />
+            </View>
+            <Button title="終わった" onPress={handleDeleteConfirm} variant="primary" />
+          </View>
+        </View>
+      </Overlay>
     </>
   );
 }

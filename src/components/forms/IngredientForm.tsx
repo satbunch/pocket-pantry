@@ -18,8 +18,10 @@ interface ButtonAreaProps {
 
 const ButtonArea = memo(function ButtonArea({ isSubmitting, onCancel, onSubmit }: ButtonAreaProps) {
   return (
-    <View style={{ marginTop: 24, flexDirection: 'row', justifyContent: 'flex-end', gap: 12 }}>
-      <Button title="キャンセル" onPress={onCancel} variant="secondary" disabled={isSubmitting} />
+    <View style={{ marginTop: 24, flexDirection: 'row', justifyContent: 'flex-end' }}>
+      <View style={{ marginRight: 12 }}>
+        <Button title="キャンセル" onPress={onCancel} variant="secondary" disabled={isSubmitting} />
+      </View>
       <Button
         title={isSubmitting ? '登録中...' : '登録'}
         onPress={onSubmit}
@@ -143,12 +145,12 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
   return (
     <TouchableWithoutFeedback onPress={handleFormTap}>
       <View className="flex-1 bg-gray-50">
-        <View className="gap-5 px-4 py-5">
+        <View className="px-4 py-5">
           {/* 基本情報セクション */}
-          <View className="rounded-xl p-5 shadow-sm">
-            <Text className="text-lg font-bold text-gray-800 mb-4">基本情報</Text>
+          <View>
+            <Text className="text-sm text-gray-800 mt-2 mb-2">基本情報</Text>
 
-            <View className="mb-5">
+            <View style={{ marginBottom: 10 }}>
               <Input label="食材名" value={name} onChangeText={setName} placeholder="例: 牛乳" error={errors.name} />
             </View>
 
@@ -191,10 +193,10 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
           </View>
 
           {/* 数量・単位セクション */}
-          <View style={{ flexDirection: 'row', gap: 24 }}>
+          <View style={{ flexDirection: 'row' }}>
             {/* 数量 */}
-            <View className="flex-1 rounded-xl p-5 shadow-sm">
-              <Text className="text-lg font-bold text-gray-800 mb-4">数量</Text>
+            <View className="flex-1 rounded-xl p-5 shadow-sm" style={{ marginRight: 24 }}>
+              <Text className="text-sm text-gray-800 mt-2 mb-2">数量</Text>
               <Input
                 label="数量"
                 value={quantity}
@@ -207,7 +209,7 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
 
             {/* 単位 */}
             <View className="flex-1 rounded-xl p-5 shadow-sm">
-              <Text className="text-lg font-bold text-gray-800 mb-4">単位</Text>
+              <Text className="text-sm text-gray-800 mt-2 mb-2">単位</Text>
               <Dropdown
                 style={{
                   borderWidth: 1,
@@ -247,8 +249,7 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
 
           {/* 増減量セクション */}
           <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-            <View style={{ width: '50%' }} className="rounded-xl p-5 shadow-sm">
-              <Text className="text-lg font-bold text-gray-800 mb-4">増減量</Text>
+            <View style={{ width: '48%' }} className="rounded-xl p-5 shadow-sm">
               <Input
                 label="増減量"
                 value={incrementAmount}
@@ -256,6 +257,7 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
                 placeholder="1"
                 keyboardType="numeric"
                 error={errors.incrementAmount}
+                className="mt-2"
               />
             </View>
           </View>
@@ -309,7 +311,7 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
                 )}
 
                 {Platform.OS === 'ios' && showDatePicker && (
-                  <View style={{ flexDirection: 'row', justifyContent: 'flex-end', gap: 12, marginTop: 8 }}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: 8 }}>
                     <TouchableOpacity onPress={() => setShowDatePicker(false)}>
                       <Text style={{ color: '#3b82f6', fontSize: 16, fontWeight: '500' }}>完了</Text>
                     </TouchableOpacity>

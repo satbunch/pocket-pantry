@@ -2,9 +2,8 @@ import { useEffect } from 'react';
 import { Stack, router } from 'expo-router';
 import { TouchableOpacity, Alert } from 'react-native';
 import * as Notifications from 'expo-notifications';
-import { PaperProvider } from 'react-native-paper';
+import { ThemeProvider } from '@rneui/themed';
 import { X } from 'lucide-react-native';
-import { theme } from '@/theme/paper';
 import { setupNotificationHandler } from '@/services/notifications/scheduler';
 
 import '../global.css';
@@ -25,7 +24,7 @@ export default function RootLayout() {
     };
   }, []);
   return (
-    <PaperProvider theme={theme}>
+    <ThemeProvider>
       <Stack
         screenOptions={{
           headerShown: false,
@@ -85,6 +84,6 @@ export default function RootLayout() {
           }}
         />
       </Stack>
-    </PaperProvider>
+    </ThemeProvider>
   );
 }

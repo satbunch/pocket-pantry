@@ -1,32 +1,55 @@
 /**
- * ボタンコンポーネント (React Native Paper)
+ * ボタンコンポーネント (React Native Elements)
  */
-import { Button as PaperButton } from 'react-native-paper';
-import { BUTTON_MODE_MAP, BUTTON_COLOR_MAP, BUTTON_OUTLINE_COLOR_MAP } from '@/constants/ui';
+import { Button as RNEButton } from '@rneui/themed';
 import type { ButtonProps } from '@/types/ui/button';
 
 export function Button({ title, onPress, variant = 'primary', disabled = false, className = '' }: ButtonProps) {
-  const isOutlined = BUTTON_MODE_MAP[variant] === 'outlined';
-  const outlineColor = isOutlined ? BUTTON_OUTLINE_COLOR_MAP[variant] : undefined;
+  const getButtonStyle = () => {
+    switch (variant) {
+      case 'primary':
+        return {
+          backgroundColor: '#3b82f6',
+        };
+      case 'secondary':
+        return {
+          backgroundColor: 'transparent',
+        };
+      case 'danger':
+        return {
+          backgroundColor: '#ef4444',
+        };
+      case 'warning':
+        return {
+          backgroundColor: '#f97316',
+        };
+      default:
+        return {
+          backgroundColor: '#3b82f6',
+        };
+    }
+  };
+
+  const getTitleStyle = () => {
+    if (variant === 'secondary') {
+      return {
+        color: '#3b82f6',
+      };
+    }
+    return {
+      color: '#ffffff',
+    };
+  };
 
   return (
-    <PaperButton
-      mode={BUTTON_MODE_MAP[variant]}
+    <RNEButton
+      title={title}
       onPress={onPress}
       disabled={disabled}
-      buttonColor={BUTTON_COLOR_MAP[variant]}
-      textColor={outlineColor}
-      style={
-        isOutlined && outlineColor
-          ? {
-              borderWidth: 1,
-              borderColor: outlineColor,
-            }
-          : undefined
-      }
+      buttonStyle={getButtonStyle()}
+      titleStyle={getTitleStyle()}
+      type={variant === 'secondary' ? 'outline' : 'solid'}
       className={className}
-    >
-      {title}
-    </PaperButton>
+    />
   );
 }

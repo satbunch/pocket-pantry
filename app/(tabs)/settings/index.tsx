@@ -2,8 +2,7 @@
  * 設定画面
  */
 import { useEffect, useState } from 'react';
-import { View, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { Switch, Text } from 'react-native-paper';
+import { View, ScrollView, TouchableWithoutFeedback, Keyboard, Switch, Text } from 'react-native';
 import { Button } from '@/components/ui/Button';
 import { loadTestData } from '@/services/localStorage/ingredients';
 import { sendTestNotification } from '@/services/notifications/scheduler';

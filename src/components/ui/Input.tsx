@@ -1,8 +1,8 @@
 /**
- * テキスト入力コンポーネント (React Native Paper)
+ * テキスト入力コンポーネント (React Native Elements)
  */
 import { View } from 'react-native';
-import { TextInput as PaperTextInput, HelperText } from 'react-native-paper';
+import { Input as RNEInput } from '@rneui/themed';
 import type { InputProps } from '@/types/ui/input';
 
 export function Input({
@@ -18,7 +18,7 @@ export function Input({
 }: InputProps) {
   return (
     <View className={className}>
-      <PaperTextInput
+      <RNEInput
         label={label}
         value={value}
         onChangeText={onChangeText}
@@ -26,14 +26,25 @@ export function Input({
         keyboardType={keyboardType}
         multiline={multiline}
         numberOfLines={numberOfLines}
-        mode="outlined"
-        error={!!error}
+        errorMessage={error}
+        errorStyle={{ color: '#ef4444', fontSize: 12 }}
+        inputContainerStyle={{
+          borderWidth: 1,
+          borderColor: error ? '#ef4444' : '#d1d5db',
+          borderRadius: 8,
+          paddingHorizontal: 12,
+          backgroundColor: '#ffffff',
+        }}
+        containerStyle={{
+          paddingHorizontal: 0,
+        }}
+        labelStyle={{
+          fontSize: 16,
+          fontWeight: '500',
+          color: '#374151',
+          marginBottom: 4,
+        }}
       />
-      {error && (
-        <HelperText type="error" visible={!!error}>
-          {error}
-        </HelperText>
-      )}
     </View>
   );
 }

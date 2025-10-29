@@ -2,7 +2,7 @@
  * 買い物リストアイテム（表示モード）
  */
 import { View, Text, TouchableOpacity } from 'react-native';
-import { Checkbox } from 'react-native-paper';
+import { CheckBox } from '@rneui/themed';
 import { Trash2, Edit2 } from 'lucide-react-native';
 import type { ShoppingListItem } from '@/types/shopping';
 
@@ -30,22 +30,19 @@ export function ShoppingListItemView({ item, onDelete, onEdit, onToggleStatus }:
       }}
     >
       {/* チェックボックス */}
-      <View
-        style={{
-          borderWidth: 2,
-          borderColor: '#3b82f6',
-          borderRadius: 4,
+      <CheckBox
+        checked={isCompleted}
+        onPress={() => onToggleStatus(item.id)}
+        checkedColor="#3b82f6"
+        containerStyle={{
+          margin: 0,
+          marginLeft: 0,
+          marginRight: 8,
           padding: 0,
-          marginRight: 16,
-          transform: [{ scale: 0.85 }],
+          backgroundColor: 'transparent',
+          borderWidth: 0,
         }}
-      >
-        <Checkbox
-          status={isCompleted ? 'checked' : 'unchecked'}
-          onPress={() => onToggleStatus(item.id)}
-          color="#3b82f6"
-        />
-      </View>
+      />
 
       {/* アイテム情報 */}
       <View className="flex-1" style={{ marginLeft: 4 }}>

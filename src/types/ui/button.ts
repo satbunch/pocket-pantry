@@ -5,7 +5,7 @@
 export interface ButtonProps {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'danger';
+  variant?: 'primary' | 'secondary' | 'danger' | 'warning';
   disabled?: boolean;
   className?: string;
 }

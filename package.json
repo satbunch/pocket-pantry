@@ -21,6 +21,7 @@
     "@rneui/base": "4.0.0-rc.8",
     "@rneui/themed": "4.0.0-rc.8",
     "@supabase/supabase-js": "^2.53.0",
+    "deepmerge": "^4.3.1",
     "expo": "~54.0.10",
     "expo-constants": "^18.0.9",
     "expo-linking": "^8.0.8",

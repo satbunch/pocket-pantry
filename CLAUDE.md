@@ -46,7 +46,7 @@ Pocket Pantryは、ゲストファーストアプローチによる食材管理R
 
 ### UI & Styling
 
-- **UI Components**: React Native Paper 5.14.5 (Material Design)
+- **UI Components**: React Native Elements (@rneui/themed 4.0.0-rc.8, @rneui/base 4.0.0-rc.8)
 - **Styling**: NativeWind 4.2.1 (Tailwind CSS for React Native)
 - **Icons**: Lucide React Native 0.546.0
 
@@ -187,7 +187,7 @@ src/
   │   ├── ui.ts
   │   └── index.ts
   ├── theme/
-  │   └── paper.ts               # React Native Paperテーマ
+  │   └── elements.ts            # React Native Elementsテーマ
   └── data/
       └── mockIngredients.ts     # 開発用モックデータ
 ```
@@ -286,10 +286,10 @@ src/
 
 **スタイリング**:
 
-- **UIコンポーネント**: React Native Paperを優先使用
+- **UIコンポーネント**: React Native Elements (@rneui/themed, @rneui/base) を優先使用
 - **レイアウト・余白調整**: NativeWind（Tailwind CSS）を使用
-- 既存のカスタムコンポーネント（Button, Input, Card等）は段階的にPaperコンポーネントに置き換え
-- Paperのテーマカスタマイズは将来実装予定（現在はデフォルトテーマ使用）
+- 既存のカスタムコンポーネント（Button, Input等）は段階的にReact Native Elementsコンポーネントに置き換え
+- Elementsのテーマカスタマイズは将来実装予定（現在はデフォルトテーマ使用）
 - インラインスタイルは避ける
 
 **コンポーネント設計**:

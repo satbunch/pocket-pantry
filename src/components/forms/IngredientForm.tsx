@@ -2,7 +2,16 @@
  * 食材登録フォームコンポーネント
  */
 import { useState, memo } from 'react';
-import { View, Text, Switch, Keyboard, TouchableWithoutFeedback, TouchableOpacity, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  Switch,
+  Keyboard,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Input } from '@/components/ui/Input';
@@ -144,215 +153,217 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
   };
 
   return (
-    <TouchableWithoutFeedback onPress={handleFormTap}>
-      <View className="flex-1 bg-gray-50">
-        <View className="px-4 py-5">
-          {/* 基本情報セクション */}
-          <View>
-            <Text className="text-sm text-gray-800 mt-2 mb-2">基本情報</Text>
-
-            <View style={{ marginBottom: 10 }}>
-              <Input label="食材名" value={name} onChangeText={setName} placeholder="例: 牛乳" error={errors.name} />
-            </View>
-
+    <View className="flex-1 bg-gray-50">
+      <ScrollView contentContainerStyle={{ paddingVertical: 20 }} keyboardShouldPersistTaps="handled">
+        <TouchableWithoutFeedback onPress={handleFormTap}>
+          <View className="px-4">
+            {/* 基本情報セクション */}
             <View>
-              <Dropdown
-                style={{
-                  borderWidth: 1,
-                  borderColor: errors.storageCategory ? THEME_COLORS.ui.borderError : THEME_COLORS.ui.border,
-                  borderRadius: 8,
-                  paddingHorizontal: 12,
-                  height: 56,
-                  backgroundColor: THEME_COLORS.ui.background,
-                }}
-                placeholderStyle={{
-                  fontSize: 16,
-                  color: THEME_COLORS.ui.textMuted,
-                }}
-                selectedTextStyle={{
-                  fontSize: 16,
-                  color: THEME_COLORS.ui.textPrimary,
-                  fontWeight: '500',
-                }}
-                inputSearchStyle={{
-                  height: 40,
-                  fontSize: 16,
-                }}
-                data={STORAGE_OPTIONS.map(option => ({
-                  label: option.label,
-                  value: option.value,
-                }))}
-                search={false}
-                maxHeight={300}
-                labelField="label"
-                valueField="value"
-                placeholder="保存場所を選択"
-                value={storageCategory}
-                onChange={item => setStorageCategory(item.value)}
-              />
-            </View>
-          </View>
+              <Text className="text-sm text-gray-800 mt-2 mb-2">基本情報</Text>
 
-          {/* 数量・単位セクション */}
-          <View style={{ flexDirection: 'row' }}>
-            {/* 数量 */}
-            <View className="flex-1 rounded-xl p-5 shadow-sm" style={{ marginRight: 24 }}>
-              <Text className="text-sm text-gray-800 mt-2 mb-2">数量</Text>
-              <Input
-                label="数量"
-                value={quantity}
-                onChangeText={setQuantity}
-                placeholder="1"
-                keyboardType="numeric"
-                error={errors.quantity}
-              />
-            </View>
-
-            {/* 単位 */}
-            <View className="flex-1 rounded-xl p-5 shadow-sm">
-              <Text className="text-sm text-gray-800 mt-2 mb-2">単位</Text>
-              <Dropdown
-                style={{
-                  borderWidth: 1,
-                  borderColor: errors.unit ? THEME_COLORS.ui.borderError : THEME_COLORS.ui.border,
-                  borderRadius: 8,
-                  paddingHorizontal: 12,
-                  height: 56,
-                  backgroundColor: THEME_COLORS.ui.background,
-                }}
-                placeholderStyle={{
-                  fontSize: 16,
-                  color: THEME_COLORS.ui.textMuted,
-                }}
-                selectedTextStyle={{
-                  fontSize: 16,
-                  color: THEME_COLORS.ui.textPrimary,
-                  fontWeight: '500',
-                }}
-                inputSearchStyle={{
-                  height: 40,
-                  fontSize: 16,
-                }}
-                data={UNIT_OPTIONS.map(option => ({
-                  label: option.label,
-                  value: option.value,
-                }))}
-                search={false}
-                maxHeight={300}
-                labelField="label"
-                valueField="value"
-                placeholder="単位を選択"
-                value={unit}
-                onChange={item => handleUnitChange(item.value)}
-              />
-            </View>
-          </View>
-
-          {/* 増減量セクション */}
-          <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-            <View style={{ width: '48%' }} className="rounded-xl p-5 shadow-sm">
-              <Input
-                label="増減量"
-                value={incrementAmount}
-                onChangeText={setIncrementAmount}
-                placeholder="1"
-                keyboardType="numeric"
-                error={errors.incrementAmount}
-                className="mt-2"
-              />
-            </View>
-          </View>
-
-          {/* 賞味期限セクション */}
-          <View
-            style={{
-              borderRadius: 12,
-              paddingVertical: 20,
-              marginTop: 8,
-            }}
-            className="shadow-sm"
-          >
-            <View className="flex-row justify-between items-center mb-4">
-              <Text className="text-lg font-bold text-gray-800">賞味期限</Text>
-              <View className="flex-row items-center gap-3">
-                <Text className="text-sm text-gray-600">{isExpiryManaged ? '管理する' : '管理しない'}</Text>
-                <Switch value={isExpiryManaged} onValueChange={setIsExpiryManaged} />
+              <View style={{ marginBottom: 10 }}>
+                <Input label="食材名" value={name} onChangeText={setName} placeholder="例: 牛乳" error={errors.name} />
               </View>
-            </View>
 
-            {isExpiryManaged && (
               <View>
-                <TouchableOpacity
-                  onPress={() => setShowDatePicker(true)}
+                <Dropdown
                   style={{
                     borderWidth: 1,
-                    borderColor: errors.expiryDate ? THEME_COLORS.ui.borderError : THEME_COLORS.ui.border,
+                    borderColor: errors.storageCategory ? THEME_COLORS.ui.borderError : THEME_COLORS.ui.border,
                     borderRadius: 8,
                     paddingHorizontal: 12,
                     height: 56,
                     backgroundColor: THEME_COLORS.ui.background,
-                    justifyContent: 'center',
                   }}
-                >
-                  <Text
+                  placeholderStyle={{
+                    fontSize: 16,
+                    color: THEME_COLORS.ui.textMuted,
+                  }}
+                  selectedTextStyle={{
+                    fontSize: 16,
+                    color: THEME_COLORS.ui.textPrimary,
+                    fontWeight: '500',
+                  }}
+                  inputSearchStyle={{
+                    height: 40,
+                    fontSize: 16,
+                  }}
+                  data={STORAGE_OPTIONS.map(option => ({
+                    label: option.label,
+                    value: option.value,
+                  }))}
+                  search={false}
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
+                  placeholder="保存場所を選択"
+                  value={storageCategory}
+                  onChange={item => setStorageCategory(item.value)}
+                />
+              </View>
+            </View>
+
+            {/* 数量・単位セクション */}
+            <View style={{ flexDirection: 'row' }}>
+              {/* 数量 */}
+              <View className="flex-1 rounded-xl p-5 shadow-sm" style={{ marginRight: 24 }}>
+                <Text className="text-sm text-gray-800 mt-2 mb-2">数量</Text>
+                <Input
+                  label="数量"
+                  value={quantity}
+                  onChangeText={setQuantity}
+                  placeholder="1"
+                  keyboardType="numeric"
+                  error={errors.quantity}
+                />
+              </View>
+
+              {/* 単位 */}
+              <View className="flex-1 rounded-xl p-5 shadow-sm">
+                <Text className="text-sm text-gray-800 mt-2 mb-2">単位</Text>
+                <Dropdown
+                  style={{
+                    borderWidth: 1,
+                    borderColor: errors.unit ? THEME_COLORS.ui.borderError : THEME_COLORS.ui.border,
+                    borderRadius: 8,
+                    paddingHorizontal: 12,
+                    height: 56,
+                    backgroundColor: THEME_COLORS.ui.background,
+                  }}
+                  placeholderStyle={{
+                    fontSize: 16,
+                    color: THEME_COLORS.ui.textMuted,
+                  }}
+                  selectedTextStyle={{
+                    fontSize: 16,
+                    color: THEME_COLORS.ui.textPrimary,
+                    fontWeight: '500',
+                  }}
+                  inputSearchStyle={{
+                    height: 40,
+                    fontSize: 16,
+                  }}
+                  data={UNIT_OPTIONS.map(option => ({
+                    label: option.label,
+                    value: option.value,
+                  }))}
+                  search={false}
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
+                  placeholder="単位を選択"
+                  value={unit}
+                  onChange={item => handleUnitChange(item.value)}
+                />
+              </View>
+            </View>
+
+            {/* 増減量セクション */}
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+              <View style={{ width: '48%' }} className="rounded-xl p-5 shadow-sm">
+                <Input
+                  label="増減量"
+                  value={incrementAmount}
+                  onChangeText={setIncrementAmount}
+                  placeholder="1"
+                  keyboardType="numeric"
+                  error={errors.incrementAmount}
+                  className="mt-2"
+                />
+              </View>
+            </View>
+
+            {/* 賞味期限セクション */}
+            <View
+              style={{
+                borderRadius: 12,
+                paddingVertical: 20,
+                marginTop: 8,
+              }}
+              className="shadow-sm"
+            >
+              <View className="flex-row justify-between items-center mb-4">
+                <Text className="text-lg font-bold text-gray-800">賞味期限</Text>
+                <View className="flex-row items-center gap-3">
+                  <Text className="text-sm text-gray-600">{isExpiryManaged ? '管理する' : '管理しない'}</Text>
+                  <Switch value={isExpiryManaged} onValueChange={setIsExpiryManaged} />
+                </View>
+              </View>
+
+              {isExpiryManaged && (
+                <View>
+                  <TouchableOpacity
+                    onPress={() => setShowDatePicker(true)}
                     style={{
-                      fontSize: 16,
-                      color: expiryDate ? THEME_COLORS.ui.textPrimary : THEME_COLORS.ui.textMuted,
-                      fontWeight: '500',
+                      borderWidth: 1,
+                      borderColor: errors.expiryDate ? THEME_COLORS.ui.borderError : THEME_COLORS.ui.border,
+                      borderRadius: 8,
+                      paddingHorizontal: 12,
+                      height: 56,
+                      backgroundColor: THEME_COLORS.ui.background,
+                      justifyContent: 'center',
                     }}
                   >
-                    {expiryDate || '賞味期限を選択'}
-                  </Text>
-                </TouchableOpacity>
-                {errors.expiryDate && (
-                  <Text style={{ color: THEME_COLORS.status.expired, fontSize: 12, marginTop: 4 }}>
-                    {errors.expiryDate}
-                  </Text>
-                )}
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        color: expiryDate ? THEME_COLORS.ui.textPrimary : THEME_COLORS.ui.textMuted,
+                        fontWeight: '500',
+                      }}
+                    >
+                      {expiryDate || '賞味期限を選択'}
+                    </Text>
+                  </TouchableOpacity>
+                  {errors.expiryDate && (
+                    <Text style={{ color: THEME_COLORS.status.expired, fontSize: 12, marginTop: 4 }}>
+                      {errors.expiryDate}
+                    </Text>
+                  )}
 
-                {showDatePicker && (
-                  <DateTimePicker
-                    value={expiryDate ? new Date(expiryDate) : new Date()}
-                    mode="date"
-                    display={Platform.OS === 'android' ? 'calendar' : 'inline'}
-                    onChange={handleDateChange}
-                  />
-                )}
+                  {showDatePicker && (
+                    <DateTimePicker
+                      value={expiryDate ? new Date(expiryDate) : new Date()}
+                      mode="date"
+                      display={Platform.OS === 'android' ? 'calendar' : 'inline'}
+                      onChange={handleDateChange}
+                    />
+                  )}
 
-                {Platform.OS === 'ios' && showDatePicker && (
-                  <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: 8 }}>
-                    <TouchableOpacity onPress={() => setShowDatePicker(false)}>
-                      <Text style={{ color: THEME_COLORS.ui.buttonPrimary, fontSize: 16, fontWeight: '500' }}>
-                        完了
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </View>
-            )}
+                  {Platform.OS === 'ios' && showDatePicker && (
+                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: 8 }}>
+                      <TouchableOpacity onPress={() => setShowDatePicker(false)}>
+                        <Text style={{ color: THEME_COLORS.ui.buttonPrimary, fontSize: 16, fontWeight: '500' }}>
+                          完了
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
+              )}
 
-            {!isExpiryManaged && <Text className="text-sm text-gray-500 italic">賞味期限は記録されません</Text>}
+              {!isExpiryManaged && <Text className="text-sm text-gray-500 italic">賞味期限は記録されません</Text>}
+            </View>
+
+            {/* メモセクション */}
+            <View className="rounded-xl p-5 shadow-sm">
+              <Text className="text-lg font-bold text-gray-800 mb-1">メモ</Text>
+              <Text className="text-xs text-gray-500 mb-4">任意</Text>
+
+              <Input
+                label="メモ"
+                value={memo}
+                onChangeText={setMemo}
+                placeholder="保存に関するメモなど"
+                multiline
+                numberOfLines={4}
+              />
+            </View>
+
+            {/* ボタンエリア */}
+            <ButtonArea isSubmitting={isSubmitting} onCancel={onCancel} onSubmit={handleSubmit} />
           </View>
-
-          {/* メモセクション */}
-          <View className="rounded-xl p-5 shadow-sm">
-            <Text className="text-lg font-bold text-gray-800 mb-1">メモ</Text>
-            <Text className="text-xs text-gray-500 mb-4">任意</Text>
-
-            <Input
-              label="メモ"
-              value={memo}
-              onChangeText={setMemo}
-              placeholder="保存に関するメモなど"
-              multiline
-              numberOfLines={4}
-            />
-          </View>
-
-          {/* ボタンエリア */}
-          <ButtonArea isSubmitting={isSubmitting} onCancel={onCancel} onSubmit={handleSubmit} />
-        </View>
-      </View>
-    </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </ScrollView>
+    </View>
   );
 }

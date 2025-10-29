@@ -1,7 +1,7 @@
 /**
  * 食材登録フォームコンポーネント
  */
-import { useState, memo } from 'react';
+import { useState } from 'react';
 import {
   View,
   Text,
@@ -19,28 +19,6 @@ import { Button } from '@/components/ui/Button';
 import { THEME_COLORS } from '@/theme/colors';
 import { STORAGE_OPTIONS, UNIT_OPTIONS, DEFAULT_INCREMENT_AMOUNTS } from '@/constants/ingredient';
 import type { CreateIngredientInput, StorageCategory, UnitType } from '@/types/ingredient';
-
-interface ButtonAreaProps {
-  isSubmitting: boolean;
-  onCancel: () => void;
-  onSubmit: () => void;
-}
-
-const ButtonArea = memo(function ButtonArea({ isSubmitting, onCancel, onSubmit }: ButtonAreaProps) {
-  return (
-    <View style={{ marginTop: 24, flexDirection: 'row', justifyContent: 'flex-end' }}>
-      <View style={{ marginRight: 12 }}>
-        <Button title="キャンセル" onPress={onCancel} variant="secondary" disabled={isSubmitting} />
-      </View>
-      <Button
-        title={isSubmitting ? '登録中...' : '登録'}
-        onPress={onSubmit}
-        variant="primary"
-        disabled={isSubmitting}
-      />
-    </View>
-  );
-});
 
 export interface IngredientFormProps {
   onSubmit: (input: CreateIngredientInput) => Promise<void>;
@@ -350,7 +328,17 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
             </View>
 
             {/* ボタンエリア */}
-            <ButtonArea isSubmitting={isSubmitting} onCancel={onCancel} onSubmit={handleSubmit} />
+            <View style={{ marginTop: 24, flexDirection: 'row', justifyContent: 'flex-end' }}>
+              <View style={{ marginRight: 12 }}>
+                <Button title="キャンセル" onPress={onCancel} variant="secondary" disabled={isSubmitting} />
+              </View>
+              <Button
+                title={isSubmitting ? '登録中...' : '登録'}
+                onPress={handleSubmit}
+                variant="primary"
+                disabled={isSubmitting}
+              />
+            </View>
           </View>
         </TouchableWithoutFeedback>
       </ScrollView>

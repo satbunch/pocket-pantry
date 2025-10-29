@@ -207,9 +207,8 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
             <View style={{ flexDirection: 'row' }}>
               {/* 数量 */}
               <View className="flex-1 rounded-xl p-5 shadow-sm" style={{ marginRight: 24 }}>
-                <Text className="text-sm text-gray-800 mt-2 mb-2">数量</Text>
+                <Text className="text-sm text-gray-800 mb-2">数量</Text>
                 <Input
-                  label="数量"
                   value={quantity}
                   onChangeText={setQuantity}
                   placeholder="1"
@@ -220,7 +219,7 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
 
               {/* 単位 */}
               <View className="flex-1 rounded-xl p-5 shadow-sm">
-                <Text className="text-sm text-gray-800 mt-2 mb-2">単位</Text>
+                <Text className="text-sm text-gray-800 mb-2">単位</Text>
                 <Dropdown
                   style={{
                     borderWidth: 1,
@@ -261,14 +260,13 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
             {/* 増減量セクション */}
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               <View style={{ width: '48%' }} className="rounded-xl p-5 shadow-sm">
+                <Text className="text-sm text-gray-800 mb-2">増減量</Text>
                 <Input
-                  label="増減量"
                   value={incrementAmount}
                   onChangeText={setIncrementAmount}
                   placeholder="1"
                   keyboardType="numeric"
                   error={errors.incrementAmount}
-                  className="mt-2"
                 />
               </View>
             </View>

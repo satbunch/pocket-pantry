@@ -139,7 +139,7 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
             <View>
               <Text className="text-sm text-gray-800 mb-2">食材名</Text>
 
-              <View style={{ marginBottom: 10 }}>
+              <View>
                 <Input value={name} onChangeText={setName} placeholder="例: 牛乳" error={errors.name} />
               </View>
 
@@ -252,12 +252,10 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
 
             {/* 賞味期限セクション */}
             <View className="rounded-xl p-5 shadow-sm">
-              <View className="flex-row justify-between items-center mb-4">
-                <Text className="text-sm text-gray-800">賞味期限</Text>
-                <View className="flex-row items-center gap-3">
-                  <Text className="text-sm text-gray-600">{isExpiryManaged ? '管理する' : '管理しない'}</Text>
-                  <Switch value={isExpiryManaged} onValueChange={setIsExpiryManaged} />
-                </View>
+              <View className="flex-row items-center mb-4">
+                <Text className="text-lg text-gray-800 mr-2">賞味期限</Text>
+                <Text className="text-sm text-gray-600 mr-1">{isExpiryManaged ? '管理する' : '管理しない'}</Text>
+                <Switch value={isExpiryManaged} onValueChange={setIsExpiryManaged} />
               </View>
 
               {isExpiryManaged && (
@@ -281,7 +279,7 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
                         fontWeight: '500',
                       }}
                     >
-                      {expiryDate || '賞味期限を選択'}
+                      {expiryDate || new Date().toISOString().split('T')[0]}
                     </Text>
                   </TouchableOpacity>
                   {errors.expiryDate && (
@@ -311,7 +309,7 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
                 </View>
               )}
 
-              {!isExpiryManaged && <Text className="text-sm text-gray-500 italic">賞味期限は記録されません</Text>}
+              {!isExpiryManaged && <Text className="text-sm text-gray-500 italic mb-4">賞味期限は記録されません</Text>}
             </View>
 
             {/* メモセクション */}

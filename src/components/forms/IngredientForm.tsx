@@ -157,15 +157,16 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
       <ScrollView contentContainerStyle={{ paddingVertical: 20 }} keyboardShouldPersistTaps="handled">
         <TouchableWithoutFeedback onPress={handleFormTap}>
           <View className="px-4">
-            {/* 基本情報セクション */}
+            {/* 食材名セクション */}
             <View>
-              <Text className="text-sm text-gray-800 mt-2 mb-2">基本情報</Text>
+              <Text className="text-sm text-gray-800 mb-2">食材名</Text>
 
               <View style={{ marginBottom: 10 }}>
-                <Input label="食材名" value={name} onChangeText={setName} placeholder="例: 牛乳" error={errors.name} />
+                <Input value={name} onChangeText={setName} placeholder="例: 牛乳" error={errors.name} />
               </View>
 
               <View>
+                <Text className="text-sm text-gray-800 mb-2">保管場所</Text>
                 <Dropdown
                   style={{
                     borderWidth: 1,
@@ -272,16 +273,9 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
             </View>
 
             {/* 賞味期限セクション */}
-            <View
-              style={{
-                borderRadius: 12,
-                paddingVertical: 20,
-                marginTop: 8,
-              }}
-              className="shadow-sm"
-            >
+            <View className="rounded-xl p-5 shadow-sm">
               <View className="flex-row justify-between items-center mb-4">
-                <Text className="text-lg font-bold text-gray-800">賞味期限</Text>
+                <Text className="text-sm text-gray-800">賞味期限</Text>
                 <View className="flex-row items-center gap-3">
                   <Text className="text-sm text-gray-600">{isExpiryManaged ? '管理する' : '管理しない'}</Text>
                   <Switch value={isExpiryManaged} onValueChange={setIsExpiryManaged} />
@@ -344,11 +338,9 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
 
             {/* メモセクション */}
             <View className="rounded-xl p-5 shadow-sm">
-              <Text className="text-lg font-bold text-gray-800 mb-1">メモ</Text>
-              <Text className="text-xs text-gray-500 mb-4">任意</Text>
+              <Text className="text-sm text-gray-800 mb-2">メモ（任意）</Text>
 
               <Input
-                label="メモ"
                 value={memo}
                 onChangeText={setMemo}
                 placeholder="保存に関するメモなど"

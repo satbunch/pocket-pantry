@@ -7,6 +7,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { THEME_COLORS } from '@/theme/colors';
 import { STORAGE_OPTIONS, UNIT_OPTIONS, DEFAULT_INCREMENT_AMOUNTS } from '@/constants/ingredient';
 import type { CreateIngredientInput, StorageCategory, UnitType } from '@/types/ingredient';
 
@@ -158,19 +159,19 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
               <Dropdown
                 style={{
                   borderWidth: 1,
-                  borderColor: errors.storageCategory ? '#EF4444' : '#D1D5DB',
+                  borderColor: errors.storageCategory ? THEME_COLORS.ui.borderError : THEME_COLORS.ui.border,
                   borderRadius: 8,
                   paddingHorizontal: 12,
                   height: 56,
-                  backgroundColor: '#ffffff',
+                  backgroundColor: THEME_COLORS.ui.background,
                 }}
                 placeholderStyle={{
                   fontSize: 16,
-                  color: '#9ca3af',
+                  color: THEME_COLORS.ui.textMuted,
                 }}
                 selectedTextStyle={{
                   fontSize: 16,
-                  color: '#111827',
+                  color: THEME_COLORS.ui.textPrimary,
                   fontWeight: '500',
                 }}
                 inputSearchStyle={{
@@ -213,19 +214,19 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
               <Dropdown
                 style={{
                   borderWidth: 1,
-                  borderColor: errors.unit ? '#EF4444' : '#D1D5DB',
+                  borderColor: errors.unit ? THEME_COLORS.ui.borderError : THEME_COLORS.ui.border,
                   borderRadius: 8,
                   paddingHorizontal: 12,
                   height: 56,
-                  backgroundColor: '#ffffff',
+                  backgroundColor: THEME_COLORS.ui.background,
                 }}
                 placeholderStyle={{
                   fontSize: 16,
-                  color: '#9ca3af',
+                  color: THEME_COLORS.ui.textMuted,
                 }}
                 selectedTextStyle={{
                   fontSize: 16,
-                  color: '#111827',
+                  color: THEME_COLORS.ui.textPrimary,
                   fontWeight: '500',
                 }}
                 inputSearchStyle={{
@@ -285,20 +286,28 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
                   onPress={() => setShowDatePicker(true)}
                   style={{
                     borderWidth: 1,
-                    borderColor: errors.expiryDate ? '#EF4444' : '#D1D5DB',
+                    borderColor: errors.expiryDate ? THEME_COLORS.ui.borderError : THEME_COLORS.ui.border,
                     borderRadius: 8,
                     paddingHorizontal: 12,
                     height: 56,
-                    backgroundColor: '#ffffff',
+                    backgroundColor: THEME_COLORS.ui.background,
                     justifyContent: 'center',
                   }}
                 >
-                  <Text style={{ fontSize: 16, color: expiryDate ? '#111827' : '#9ca3af', fontWeight: '500' }}>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      color: expiryDate ? THEME_COLORS.ui.textPrimary : THEME_COLORS.ui.textMuted,
+                      fontWeight: '500',
+                    }}
+                  >
                     {expiryDate || '賞味期限を選択'}
                   </Text>
                 </TouchableOpacity>
                 {errors.expiryDate && (
-                  <Text style={{ color: '#EF4444', fontSize: 12, marginTop: 4 }}>{errors.expiryDate}</Text>
+                  <Text style={{ color: THEME_COLORS.status.expired, fontSize: 12, marginTop: 4 }}>
+                    {errors.expiryDate}
+                  </Text>
                 )}
 
                 {showDatePicker && (
@@ -313,7 +322,9 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
                 {Platform.OS === 'ios' && showDatePicker && (
                   <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: 8 }}>
                     <TouchableOpacity onPress={() => setShowDatePicker(false)}>
-                      <Text style={{ color: '#3b82f6', fontSize: 16, fontWeight: '500' }}>完了</Text>
+                      <Text style={{ color: THEME_COLORS.ui.buttonPrimary, fontSize: 16, fontWeight: '500' }}>
+                        完了
+                      </Text>
                     </TouchableOpacity>
                   </View>
                 )}

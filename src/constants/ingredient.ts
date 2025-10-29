@@ -46,3 +46,8 @@ export const DEFAULT_INCREMENT_AMOUNTS: Record<string, number> = {
   パック: 1,
   枚: 1,
 };
+
+/**
+ * 食材数量の最大値（5桁まで対応）
+ */
+export const MAX_INGREDIENT_QUANTITY = 99999;

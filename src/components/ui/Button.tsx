@@ -2,6 +2,7 @@
  * ボタンコンポーネント (React Native Elements)
  */
 import { Button as RNEButton } from '@rneui/themed';
+import { THEME_COLORS } from '@/theme/colors';
 import type { ButtonProps } from '@/types/ui/button';
 
 export function Button({ title, onPress, variant = 'primary', disabled = false, className = '' }: ButtonProps) {
@@ -9,7 +10,7 @@ export function Button({ title, onPress, variant = 'primary', disabled = false, 
     switch (variant) {
       case 'primary':
         return {
-          backgroundColor: '#3b82f6',
+          backgroundColor: THEME_COLORS.ui.buttonPrimary,
         };
       case 'secondary':
         return {
@@ -17,15 +18,15 @@ export function Button({ title, onPress, variant = 'primary', disabled = false, 
         };
       case 'danger':
         return {
-          backgroundColor: '#ef4444',
+          backgroundColor: THEME_COLORS.ui.buttonDanger,
         };
       case 'warning':
         return {
-          backgroundColor: '#f97316',
+          backgroundColor: THEME_COLORS.ui.buttonWarning,
         };
       default:
         return {
-          backgroundColor: '#3b82f6',
+          backgroundColor: THEME_COLORS.ui.buttonPrimary,
         };
     }
   };
@@ -33,11 +34,11 @@ export function Button({ title, onPress, variant = 'primary', disabled = false, 
   const getTitleStyle = () => {
     if (variant === 'secondary') {
       return {
-        color: '#3b82f6',
+        color: THEME_COLORS.ui.buttonSecondary,
       };
     }
     return {
-      color: '#ffffff',
+      color: THEME_COLORS.ui.buttonTextWhite,
     };
   };
 

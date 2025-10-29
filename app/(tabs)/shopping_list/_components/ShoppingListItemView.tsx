@@ -4,6 +4,7 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import { CheckBox } from '@rneui/themed';
 import { Trash2, Edit2 } from 'lucide-react-native';
+import { THEME_COLORS } from '@/theme/colors';
 import type { ShoppingListItem } from '@/types/shopping';
 
 interface ShoppingListItemViewProps {
@@ -23,9 +24,9 @@ export function ShoppingListItemView({ item, onDelete, onEdit, onToggleStatus }:
         alignItems: 'center',
         paddingHorizontal: 16,
         paddingVertical: 12,
-        backgroundColor: '#ffffff',
+        backgroundColor: THEME_COLORS.ui.background,
         borderBottomWidth: 1,
-        borderBottomColor: '#e5e7eb',
+        borderBottomColor: THEME_COLORS.ui.border,
         opacity: isCompleted ? 0.6 : 1,
       }}
     >
@@ -33,7 +34,7 @@ export function ShoppingListItemView({ item, onDelete, onEdit, onToggleStatus }:
       <CheckBox
         checked={isCompleted}
         onPress={() => onToggleStatus(item.id)}
-        checkedColor="#3b82f6"
+        checkedColor={THEME_COLORS.ui.buttonPrimary}
         containerStyle={{
           margin: 0,
           marginLeft: 0,
@@ -50,13 +51,15 @@ export function ShoppingListItemView({ item, onDelete, onEdit, onToggleStatus }:
           style={{
             fontSize: 16,
             fontWeight: '600',
-            color: isCompleted ? '#9ca3af' : '#1f2937',
+            color: isCompleted ? THEME_COLORS.ui.textMuted : THEME_COLORS.ui.textPrimary,
             textDecorationLine: isCompleted ? 'line-through' : 'none',
           }}
         >
           {item.name}
         </Text>
-        <Text className="text-sm text-gray-500 mt-1">数量: {item.quantity}</Text>
+        <Text className="text-sm mt-1" style={{ color: THEME_COLORS.ui.textMuted }}>
+          数量: {item.quantity}
+        </Text>
       </View>
 
       {/* 編集ボタン */}
@@ -66,7 +69,7 @@ export function ShoppingListItemView({ item, onDelete, onEdit, onToggleStatus }:
         activeOpacity={0.7}
         disabled={isCompleted}
       >
-        <Edit2 size={20} color={isCompleted ? '#d1d5db' : '#3b82f6'} />
+        <Edit2 size={20} color={isCompleted ? THEME_COLORS.ui.border : THEME_COLORS.ui.buttonPrimary} />
       </TouchableOpacity>
 
       {/* 削除ボタン */}
@@ -75,7 +78,7 @@ export function ShoppingListItemView({ item, onDelete, onEdit, onToggleStatus }:
         className="ml-2 p-2 rounded-full active:bg-red-50"
         activeOpacity={0.7}
       >
-        <Trash2 size={20} color="#ef4444" />
+        <Trash2 size={20} color={THEME_COLORS.ui.delete} />
       </TouchableOpacity>
     </View>
   );

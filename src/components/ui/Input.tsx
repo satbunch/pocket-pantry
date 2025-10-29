@@ -3,6 +3,7 @@
  */
 import { View } from 'react-native';
 import { Input as RNEInput } from '@rneui/themed';
+import { THEME_COLORS } from '@/theme/colors';
 import type { InputProps } from '@/types/ui/input';
 
 export function Input({
@@ -27,13 +28,13 @@ export function Input({
         multiline={multiline}
         numberOfLines={numberOfLines}
         errorMessage={error}
-        errorStyle={{ color: '#ef4444', fontSize: 12 }}
+        errorStyle={{ color: THEME_COLORS.status.expired, fontSize: 12 }}
         inputContainerStyle={{
           borderWidth: 1,
-          borderColor: error ? '#ef4444' : '#d1d5db',
+          borderColor: error ? THEME_COLORS.ui.borderError : THEME_COLORS.ui.border,
           borderRadius: 8,
           paddingHorizontal: 12,
-          backgroundColor: '#ffffff',
+          backgroundColor: THEME_COLORS.ui.background,
         }}
         containerStyle={{
           paddingHorizontal: 0,
@@ -41,7 +42,7 @@ export function Input({
         labelStyle={{
           fontSize: 16,
           fontWeight: '500',
-          color: '#374151',
+          color: THEME_COLORS.ui.textSecondary,
           marginBottom: 4,
         }}
       />

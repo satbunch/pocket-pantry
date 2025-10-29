@@ -41,7 +41,7 @@ export function IngredientListItem({ item, onDelete, onEdit, onQuantityChange }:
 
   const expiryStatus = getExpiryStatus(item.expiryDate);
   const expiryText =
-    item.isExpiryManaged && item.expiryDate
+    !item.isExpiryNotManaged && item.expiryDate
       ? `${item.expiryDate}${expiryStatus === 'expired' ? ' (期限切れ)' : expiryStatus === 'soon' ? ' (まもなく期限)' : ''}`
       : '';
   const description = [expiryText, item.memo].filter(Boolean).join('\n');

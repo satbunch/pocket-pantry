@@ -92,7 +92,7 @@ export default function ShoppingListScreen() {
           quantity: item.quantity,
           unit: '個', // デフォルトは個
           incrementAmount: DEFAULT_INCREMENT_AMOUNTS['個'],
-          isExpiryManaged: false,
+          isExpiryNotManaged: true,
           expiryDate: null,
           memo: '買い物リストから追加',
         });

@@ -13,7 +13,7 @@ export interface Ingredient {
   quantity: number;
   unit: UnitType;
   incrementAmount: number; // 増減ボタンで増減する量
-  isExpiryManaged: boolean;
+  isExpiryNotManaged: boolean; // true = 賞味期限を管理しない, false = 賞味期限を管理する
   expiryDate: string | null; // ISO 8601形式 (YYYY-MM-DD)
   memo: string;
   createdAt: string; // ISO 8601形式
@@ -26,7 +26,7 @@ export interface CreateIngredientInput {
   quantity: number;
   unit: UnitType;
   incrementAmount: number;
-  isExpiryManaged: boolean;
+  isExpiryNotManaged: boolean; // true = 賞味期限を管理しない, false = 賞味期限を管理する
   expiryDate: string | null;
   memo?: string;
 }
@@ -38,7 +38,7 @@ export interface UpdateIngredientInput {
   quantity?: number;
   unit?: UnitType;
   incrementAmount?: number;
-  isExpiryManaged?: boolean;
+  isExpiryNotManaged?: boolean; // true = 賞味期限を管理しない, false = 賞味期限を管理する
   expiryDate?: string | null;
   memo?: string;
 }

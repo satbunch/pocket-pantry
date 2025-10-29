@@ -59,7 +59,7 @@ export async function createIngredient(input: CreateIngredientInput): Promise<In
       quantity: input.quantity,
       unit: input.unit,
       incrementAmount: input.incrementAmount,
-      isExpiryManaged: input.isExpiryManaged,
+      isExpiryNotManaged: input.isExpiryNotManaged,
       expiryDate: input.expiryDate,
       memo: input.memo || '',
       createdAt: now,
@@ -151,7 +151,7 @@ export async function loadTestData(): Promise<void> {
         quantity: 1000,
         unit: 'ml',
         incrementAmount: DEFAULT_INCREMENT_AMOUNTS['ml'],
-        isExpiryManaged: true,
+        isExpiryNotManaged: false,
         expiryDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 3日後
         memo: '',
         createdAt: new Date().toISOString(),
@@ -164,7 +164,7 @@ export async function loadTestData(): Promise<void> {
         quantity: 200,
         unit: 'g',
         incrementAmount: DEFAULT_INCREMENT_AMOUNTS['g'],
-        isExpiryManaged: true,
+        isExpiryNotManaged: false,
         expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7日後
         memo: 'スライスチーズ',
         createdAt: new Date().toISOString(),
@@ -177,7 +177,7 @@ export async function loadTestData(): Promise<void> {
         quantity: 3,
         unit: '個',
         incrementAmount: DEFAULT_INCREMENT_AMOUNTS['個'],
-        isExpiryManaged: true,
+        isExpiryNotManaged: false,
         expiryDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 5日後
         memo: '',
         createdAt: new Date().toISOString(),
@@ -190,7 +190,7 @@ export async function loadTestData(): Promise<void> {
         quantity: 12,
         unit: '個',
         incrementAmount: DEFAULT_INCREMENT_AMOUNTS['個'],
-        isExpiryManaged: true,
+        isExpiryNotManaged: false,
         expiryDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 14日後
         memo: '',
         createdAt: new Date().toISOString(),
@@ -203,7 +203,7 @@ export async function loadTestData(): Promise<void> {
         quantity: 500,
         unit: 'g',
         incrementAmount: DEFAULT_INCREMENT_AMOUNTS['g'],
-        isExpiryManaged: false,
+        isExpiryNotManaged: true,
         expiryDate: null,
         memo: '',
         createdAt: new Date().toISOString(),
@@ -216,7 +216,7 @@ export async function loadTestData(): Promise<void> {
         quantity: 4,
         unit: '個',
         incrementAmount: DEFAULT_INCREMENT_AMOUNTS['個'],
-        isExpiryManaged: true,
+        isExpiryNotManaged: false,
         expiryDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 10日後
         memo: 'フジりんご',
         createdAt: new Date().toISOString(),

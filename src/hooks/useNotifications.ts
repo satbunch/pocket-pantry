@@ -31,7 +31,7 @@ export function useNotifications() {
    * 食材の賞味期限通知をスケジュール
    */
   const scheduleNotification = useCallback(async (ingredient: Ingredient) => {
-    if (!ingredient.isExpiryManaged || !ingredient.expiryDate) {
+    if (ingredient.isExpiryNotManaged || !ingredient.expiryDate) {
       return null;
     }
 

@@ -36,11 +36,15 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
     initialValues?.incrementAmount?.toString() ||
       (initialValues?.unit ? DEFAULT_INCREMENT_AMOUNTS[initialValues.unit]?.toString() || '1' : '1')
   );
-  const [isExpiryManaged, setIsExpiryManaged] = useState(initialValues?.isExpiryManaged ?? false);
-  const [expiryDate, setExpiryDate] = useState(
-    initialValues?.expiryDate ||
-      (!(initialValues?.isExpiryManaged ?? false) ? new Date().toISOString().split('T')[0] : '')
-  );
+  const [isExpiryNotManaged, setIsExpiryNotManaged] = useState(initialValues?.isExpiryNotManaged ?? false);
+  const [expiryDate, setExpiryDate] = useState(() => {
+    // 初期値がある場合はそれを使用
+    if (initialValues?.expiryDate) {
+      return initialValues.expiryDate;
+    }
+    // 新規作成時：管理する（isExpiryNotManaged=false）場合は今日の日付、管理しない場合は空文字
+    return !(initialValues?.isExpiryNotManaged ?? false) ? new Date().toISOString().split('T')[0] : '';
+  });
   const [memo, setMemo] = useState(initialValues?.memo || '');
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -74,7 +78,7 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
       newErrors.incrementAmount = '増減量は1以上の数値で入力してください';
     }
 
-    if (isExpiryManaged && expiryDate) {
+    if (!isExpiryNotManaged && expiryDate) {
       const date = new Date(expiryDate);
       if (isNaN(date.getTime())) {
         newErrors.expiryDate = '正しい日付形式で入力してください（例: 2025-12-31）';
@@ -99,8 +103,8 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
         quantity: Number(quantity),
         unit: unit as UnitType,
         incrementAmount: Number(incrementAmount),
-        isExpiryManaged,
-        expiryDate: isExpiryManaged && expiryDate ? expiryDate : null,
+        isExpiryNotManaged,
+        expiryDate: !isExpiryNotManaged && expiryDate ? expiryDate : null,
         memo: memo.trim(),
       };
 
@@ -272,11 +276,12 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
                       style={{
                         flex: 1,
                         fontSize: 16,
-                        color: !isExpiryManaged && expiryDate ? THEME_COLORS.ui.textPrimary : THEME_COLORS.ui.textMuted,
+                        color:
+                          !isExpiryNotManaged && expiryDate ? THEME_COLORS.ui.textPrimary : THEME_COLORS.ui.textMuted,
                         fontWeight: '500',
                       }}
                     >
-                      {!isExpiryManaged ? expiryDate || new Date().toISOString().split('T')[0] : '賞味期限なし'}
+                      {!isExpiryNotManaged ? expiryDate || new Date().toISOString().split('T')[0] : '賞味期限なし'}
                     </Text>
                     <Calendar size={20} color={THEME_COLORS.ui.icon} />
                   </TouchableOpacity>
@@ -286,7 +291,7 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
                     <Text className="text-xs text-gray-600">賞味期限を</Text>
                     <Text className="text-xs text-gray-600">管理しない</Text>
                   </View>
-                  <Switch value={isExpiryManaged} onValueChange={setIsExpiryManaged} />
+                  <Switch value={isExpiryNotManaged} onValueChange={setIsExpiryNotManaged} />
                 </View>
               </View>
               {showDatePicker && (
@@ -310,7 +315,7 @@ export function IngredientForm({ onSubmit, onCancel, initialValues }: Ingredient
                 </View>
               )}
 
-              {!isExpiryManaged && errors.expiryDate && (
+              {!isExpiryNotManaged && errors.expiryDate && (
                 <Text style={{ color: THEME_COLORS.status.expired, fontSize: 12, marginTop: 4 }}>
                   {errors.expiryDate}
                 </Text>

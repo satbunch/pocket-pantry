@@ -31,7 +31,7 @@ export default function EditIngredientScreen() {
             quantity: ingredient.quantity,
             unit: ingredient.unit,
             incrementAmount: ingredient.incrementAmount,
-            isExpiryManaged: ingredient.isExpiryManaged,
+            isExpiryNotManaged: ingredient.isExpiryNotManaged,
             expiryDate: ingredient.expiryDate,
             memo: ingredient.memo,
           });

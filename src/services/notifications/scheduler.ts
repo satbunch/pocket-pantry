@@ -25,7 +25,7 @@ export function setupNotificationHandler(): void {
  * 食材の賞味期限通知をスケジュール
  */
 export async function scheduleExpiryNotification(ingredient: Ingredient): Promise<string | null> {
-  if (!ingredient.isExpiryManaged || !ingredient.expiryDate) {
+  if (ingredient.isExpiryNotManaged || !ingredient.expiryDate) {
     return null;
   }
 

@@ -5,6 +5,7 @@ import * as Notifications from 'expo-notifications';
 import { ThemeProvider } from '@rneui/themed';
 import { X } from 'lucide-react-native';
 import { setupNotificationHandler } from '@/services/notifications/scheduler';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 import '../global.css';
 
@@ -23,67 +24,70 @@ export default function RootLayout() {
       subscription.remove();
     };
   }, []);
+
   return (
-    <ThemeProvider>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="(modals)/add_ingredient"
-          options={{
-            presentation: 'modal',
-            title: '食材を追加',
-            headerShown: true,
-            headerStyle: {
-              backgroundColor: '#ffffff',
-            },
-            headerTitleStyle: {
-              fontSize: 18,
-              fontWeight: '600',
-              color: '#111827',
-            },
-            headerShadowVisible: true,
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => router.back()}
-                className="ml-4 p-2 rounded-full active:bg-gray-100"
-                activeOpacity={0.7}
-              >
-                <X size={24} color="#374151" />
-              </TouchableOpacity>
-            ),
+    <AuthProvider>
+      <ThemeProvider>
+        <Stack
+          screenOptions={{
+            headerShown: false,
           }}
-        />
-        <Stack.Screen
-          name="(modals)/edit_ingredient"
-          options={{
-            presentation: 'modal',
-            title: '食材を編集',
-            headerShown: true,
-            headerStyle: {
-              backgroundColor: '#ffffff',
-            },
-            headerTitleStyle: {
-              fontSize: 18,
-              fontWeight: '600',
-              color: '#111827',
-            },
-            headerShadowVisible: true,
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => router.back()}
-                className="ml-4 p-2 rounded-full active:bg-gray-100"
-                activeOpacity={0.7}
-              >
-                <X size={24} color="#374151" />
-              </TouchableOpacity>
-            ),
-          }}
-        />
-      </Stack>
-    </ThemeProvider>
+        >
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="(modals)/add_ingredient"
+            options={{
+              presentation: 'modal',
+              title: '食材を追加',
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: '#ffffff',
+              },
+              headerTitleStyle: {
+                fontSize: 18,
+                fontWeight: '600',
+                color: '#111827',
+              },
+              headerShadowVisible: true,
+              headerLeft: () => (
+                <TouchableOpacity
+                  onPress={() => router.back()}
+                  className="ml-4 p-2 rounded-full active:bg-gray-100"
+                  activeOpacity={0.7}
+                >
+                  <X size={24} color="#374151" />
+                </TouchableOpacity>
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="(modals)/edit_ingredient"
+            options={{
+              presentation: 'modal',
+              title: '食材を編集',
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: '#ffffff',
+              },
+              headerTitleStyle: {
+                fontSize: 18,
+                fontWeight: '600',
+                color: '#111827',
+              },
+              headerShadowVisible: true,
+              headerLeft: () => (
+                <TouchableOpacity
+                  onPress={() => router.back()}
+                  className="ml-4 p-2 rounded-full active:bg-gray-100"
+                  activeOpacity={0.7}
+                >
+                  <X size={24} color="#374151" />
+                </TouchableOpacity>
+              ),
+            }}
+          />
+        </Stack>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }

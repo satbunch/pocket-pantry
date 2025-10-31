@@ -6,6 +6,7 @@
     "paths": {
       "@/*": ["./*"],
       "@/components/*": ["./src/components/*"],
+      "@/contexts/*": ["./src/contexts/*"],
       "@/screens/*": ["./src/screens/*"],
       "@/hooks/*": ["./src/hooks/*"],
       "@/utils/*": ["./src/utils/*"],

@@ -5,7 +5,7 @@ import * as Notifications from 'expo-notifications';
 import { ThemeProvider } from '@rneui/themed';
 import { X } from 'lucide-react-native';
 import { setupNotificationHandler } from '@/services/notifications/scheduler';
-import { AuthProvider } from '@/contexts/AuthContext';
+import { AuthProvider } from '@/contexts/AuthProvider';
 
 import '../global.css';
 

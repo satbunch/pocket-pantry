@@ -3,6 +3,7 @@
  */
 
 import type { Session, User } from '@supabase/supabase-js';
+import type { Profile, Family } from './database';
 
 export interface AuthUser extends User {
   email?: string;
@@ -11,6 +12,8 @@ export interface AuthUser extends User {
 export interface AuthContextType {
   session: Session | null;
   user: AuthUser | null;
+  profile: Profile | null; // Phase 2: ユーザープロフィール
+  family: Family | null; // Phase 2: 所属ファミリー
   loading: boolean;
   signUp: (email: string, password: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;

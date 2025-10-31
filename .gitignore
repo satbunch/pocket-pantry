@@ -39,3 +39,6 @@ yarn-error.*
 
 # documents
 docs/
+
+# Claude Code settings
+.claude/settings.local.json

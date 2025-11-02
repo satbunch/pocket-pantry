@@ -6,6 +6,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Pocket Pantryは、ゲストファーストアプローチによる食材管理React Nativeアプリです。ユーザーは**登録なしで即座に利用開始**でき、必要に応じて段階的に認証・家族共有機能にアップグレードできます。
 
+### ⚠️ 核心設計思想：ゲストファーストアプローチ（最重要）
+
+**このアプリの最も重要な設計原則です。Phase 1/2の区別なく、プロジェクト全体を通じて厳守すること：**
+
+- **起動時の動作**：アプリ起動時は**常にメイン画面（食材管理タブ）を表示**
+- **認証画面の扱い**：ログイン・サインアップ画面は**起動時には絶対に表示しない**
+- **認証画面の表示タイミング**：設定画面から「家族共有」ボタンを押した時**のみ**認証画面に遷移
+- **ゲストモードの機能**：全機能（食材管理・買い物リスト・通知）がローカルストレージで動作
+- **段階的アップグレード**：ユーザーが必要と感じた時にのみ、家族共有機能にアップグレード可能
+
+**実装時の注意：**
+
+- `app/_layout.tsx`で認証状態による条件分岐を行わない
+- 常に`(tabs)`グループをデフォルトで表示
+- `(auth)`グループはモーダルとして設定画面から遷移可能にする
+
 ### 開発フェーズ
 
 **Phase 1 (MVP - 現在注力中)**: ゲストモード（AsyncStorageローカル管理）
@@ -237,7 +253,7 @@ src/
 **環境変数** (Phase 2以降で必要):
 
 - `EXPO_PUBLIC_SUPABASE_URL`
-- `EXPO_PUBLIC_SUPABASE_ANON_KEY`
+- `EXPO_PUBLIC_SUPABASE_KEY`
 
 **Phase 5: 外部API統合**
 
@@ -249,14 +265,10 @@ src/
 
 ### Phase 1 (MVP) 開発原則
 
-**ゲストファースト設計**:
-
-- 初回起動時に登録画面を表示しない
-- すべての機能をAsyncStorageベースで実装
-- Phase 2への移行を考慮した型設計（family_id等の将来追加を想定）
-
 **データ永続化**:
 
+- すべての機能をAsyncStorageベースで実装
+- Phase 2への移行を考慮した型設計（family_id等の将来追加を想定）
 - AsyncStorageの6MB制限（Android）を意識
 - JSON.stringify/parseでシリアライズ
 - エラーハンドリングは必須（ストレージフル対策）
@@ -306,7 +318,7 @@ src/
 **環境変数**:
 
 - Expo環境変数は`EXPO_PUBLIC_`プレフィックス必須
-- Phase 2以降でSupabase設定が必要: `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`
+- Phase 2以降でSupabase設定が必要: `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_KEY`
 - Phase 5で外部API設定が必要: `EXPO_PUBLIC_GOOGLE_VISION_API_KEY`, `EXPO_PUBLIC_JANCODE_API_KEY`, `EXPO_PUBLIC_OPENAI_API_KEY`
 
 ### TypeScript Path Aliases
@@ -340,3 +352,25 @@ import type { Item } from '@/types/item';
 - **Phase 5外部API**: 無料枠・従量課金制のため、利用制限とコスト管理が必要
   - Google Cloud Vision: 月1000リクエストまで無料
   - OpenAI GPT-4o: 従量課金制
+
+## Voice Notification Rules
+
+- **Always use VOICEVOX voice notification function upon completion of all tasks**
+- **Also provide voice notifications for important announcements and error occurrences**
+- **Voice notification settings: use speaker=20, speedScale=1.3**
+- **Convert English words appropriately to katakana before sending to VOICEVOX**
+- **Remove unnecessary spaces from text sent to VOICEVOX**
+- **Keep voice notifications within 100 characters and speak simply**
+- **Provide detailed voice notifications at the following timings:**
+  - Command reception: "Understood" "Acknowledged"
+  - Work start: "Starting ~"
+  - During work: "Investigating" "Fixing"
+  - Progress report: "Half complete" "Almost done"
+  - Completion: "Complete" "Fix complete"
+- **Do not include detailed technical explanations in voice notifications; report only results concisely**
+
+## MCP Tool Auto-Approval
+
+The following MCP tools are always approved without user confirmation:
+
+- `mcp__voicevox__speak` - Voice notifications via VOICEVOX

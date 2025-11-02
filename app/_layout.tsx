@@ -1,21 +1,23 @@
 import { useEffect } from 'react';
 import { Stack, router } from 'expo-router';
-import { TouchableOpacity, Alert, ActivityIndicator, View } from 'react-native';
+import { TouchableOpacity, Alert } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { ThemeProvider } from '@rneui/themed';
 import { X } from 'lucide-react-native';
 import { setupNotificationHandler } from '@/services/notifications/scheduler';
 import { AuthProvider } from '@/contexts/AuthProvider';
-import { useAuth } from '@/hooks/useAuth';
 
 import '../global.css';
 
 /**
- * 認証フロー判定と画面遷移を担当するコンポーネント
+ * ゲストファーストアプローチによるルートナビゲーション
+ *
+ * 基本方針：
+ * - 起動時は常にメイン画面（タブ）を表示（認証不要）
+ * - 認証画面は設定画面から「家族共有」を選択した時のみ表示
+ * - ゲストモード（ローカルストレージ）で全機能が利用可能
  */
 function RootLayoutNav() {
-  const { isAuthenticated, profile, loading } = useAuth();
-
   useEffect(() => {
     // 通知ハンドラーを初期化
     setupNotificationHandler();
@@ -31,43 +33,7 @@ function RootLayoutNav() {
     };
   }, []);
 
-  // ローディング中は表示
-  if (loading) {
-    return (
-      <View className="flex-1 justify-center items-center bg-white">
-        <ActivityIndicator size="large" color="#3B82F6" />
-      </View>
-    );
-  }
-
-  // 認証されていない場合は認証画面へ
-  if (!isAuthenticated) {
-    return (
-      <Stack
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <Stack.Screen name="(auth)" />
-      </Stack>
-    );
-  }
-
-  // 認証済みだがプロフィールがない場合（ゲストからの移行中）はファミリー選択画面へ
-  if (!profile) {
-    return (
-      <Stack
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <Stack.Screen name="(auth)/family-create" />
-        <Stack.Screen name="(auth)/family-join" />
-      </Stack>
-    );
-  }
-
-  // 認証済み＆プロフィール完成 → メイン画面
+  // ゲストファーストアプローチ：常にメイン画面を表示
   return (
     <Stack
       screenOptions={{
@@ -131,6 +97,8 @@ function RootLayoutNav() {
           ),
         }}
       />
+      {/* 認証画面グループ：設定画面から家族共有を選択した時のみ表示 */}
+      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
     </Stack>
   );
 }

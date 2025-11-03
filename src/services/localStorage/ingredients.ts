@@ -8,7 +8,7 @@ import type { Ingredient, CreateIngredientInput, UpdateIngredientInput } from '@
 /**
  * 全食材を取得
  */
-export async function getAllIngredients(): Promise<Ingredient[]> {
+export const getAllIngredients = async (): Promise<Ingredient[]> => {
   try {
     const jsonValue = await AsyncStorage.getItem(INGREDIENT_STORAGE_KEY);
     return jsonValue != null ? JSON.parse(jsonValue) : [];
@@ -16,12 +16,12 @@ export async function getAllIngredients(): Promise<Ingredient[]> {
     console.error('食材の取得に失敗しました:', error);
     return [];
   }
-}
+};
 
 /**
  * IDで食材を取得
  */
-export async function getIngredientById(id: string): Promise<Ingredient | null> {
+export const getIngredientById = async (id: string): Promise<Ingredient | null> => {
   try {
     const ingredients = await getAllIngredients();
     return ingredients.find(ingredient => ingredient.id === id) || null;
@@ -29,12 +29,12 @@ export async function getIngredientById(id: string): Promise<Ingredient | null> 
     console.error('食材の取得に失敗しました:', error);
     return null;
   }
-}
+};
 
 /**
  * 保存場所でフィルタして取得
  */
-export async function getIngredientsByCategory(category: string): Promise<Ingredient[]> {
+export const getIngredientsByCategory = async (category: string): Promise<Ingredient[]> => {
   try {
     const ingredients = await getAllIngredients();
     return ingredients.filter(ingredient => ingredient.storageCategory === category);
@@ -42,12 +42,12 @@ export async function getIngredientsByCategory(category: string): Promise<Ingred
     console.error('食材の取得に失敗しました:', error);
     return [];
   }
-}
+};
 
 /**
  * 新しい食材を作成
  */
-export async function createIngredient(input: CreateIngredientInput): Promise<Ingredient> {
+export const createIngredient = async (input: CreateIngredientInput): Promise<Ingredient> => {
   try {
     const ingredients = await getAllIngredients();
     const now = new Date().toISOString();
@@ -74,12 +74,12 @@ export async function createIngredient(input: CreateIngredientInput): Promise<In
     console.error('食材の作成に失敗しました:', error);
     throw new Error('食材の作成に失敗しました');
   }
-}
+};
 
 /**
  * 食材を更新
  */
-export async function updateIngredient(input: UpdateIngredientInput): Promise<Ingredient | null> {
+export const updateIngredient = async (input: UpdateIngredientInput): Promise<Ingredient | null> => {
   try {
     const ingredients = await getAllIngredients();
     const index = ingredients.findIndex(ingredient => ingredient.id === input.id);
@@ -102,12 +102,12 @@ export async function updateIngredient(input: UpdateIngredientInput): Promise<In
     console.error('食材の更新に失敗しました:', error);
     return null;
   }
-}
+};
 
 /**
  * 食材を削除
  */
-export async function deleteIngredient(id: string): Promise<boolean> {
+export const deleteIngredient = async (id: string): Promise<boolean> => {
   try {
     const ingredients = await getAllIngredients();
     const filtered = ingredients.filter(ingredient => ingredient.id !== id);
@@ -118,30 +118,30 @@ export async function deleteIngredient(id: string): Promise<boolean> {
     console.error('食材の削除に失敗しました:', error);
     return false;
   }
-}
+};
 
 /**
  * 全食材を削除（開発用）
  */
-export async function clearAllIngredients(): Promise<void> {
+export const clearAllIngredients = async (): Promise<void> => {
   try {
     await AsyncStorage.removeItem(INGREDIENT_STORAGE_KEY);
   } catch (error) {
     console.error('食材の全削除に失敗しました:', error);
   }
-}
+};
 
 /**
  * ユニークIDを生成
  */
-function generateId(): string {
+const generateId = (): string => {
   return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-}
+};
 
 /**
  * テスト用データをロード（開発時のみ）
  */
-export async function loadTestData(): Promise<void> {
+export const loadTestData = async (): Promise<void> => {
   try {
     const testIngredients: Ingredient[] = [
       {
@@ -229,4 +229,4 @@ export async function loadTestData(): Promise<void> {
   } catch (error) {
     console.error('テストデータのロードに失敗しました:', error);
   }
-}
+};

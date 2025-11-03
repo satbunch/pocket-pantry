@@ -3,14 +3,17 @@
  */
 import { useEffect, useState } from 'react';
 import { View, ScrollView, TouchableWithoutFeedback, Keyboard, Switch, Text } from 'react-native';
+import { router } from 'expo-router';
 import { Button } from '@/components/ui/Button';
 import { loadTestData } from '@/services/localStorage/ingredients';
 import { sendTestNotification } from '@/services/notifications/scheduler';
 import { loadNotificationSettings, setNotificationEnabled } from '@/services/localStorage/notificationSettings';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function SettingsScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const { isAuthenticated, profile } = useAuth();
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -53,10 +56,35 @@ export default function SettingsScreen() {
     }
   };
 
+  const handleNavigateToAuth = () => {
+    router.push('/(auth)/login');
+  };
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ScrollView className="flex-1 bg-white">
         <View className="p-4">
+          {/* 家族共有 */}
+          <View className="mb-6">
+            <Text className="text-base font-semibold text-gray-800 mb-4">家族共有</Text>
+            {isAuthenticated && profile ? (
+              <View className="bg-gray-50 p-4 rounded-lg">
+                <Text className="text-gray-800 font-medium mb-2">家族: {profile.family_id}</Text>
+                <Text className="text-gray-600 text-sm">ニックネーム: {profile.name}</Text>
+              </View>
+            ) : (
+              <View>
+                <View className="bg-blue-50 p-4 rounded-lg mb-3">
+                  <Text className="text-gray-700 text-sm mb-2">家族でデータを共有して、みんなで食材管理ができます</Text>
+                  <Text className="text-gray-600 text-xs">
+                    • リアルタイム同期{'\n'}• クラウドバックアップ{'\n'}• 複数デバイス対応
+                  </Text>
+                </View>
+                <Button title="家族共有を始める" onPress={handleNavigateToAuth} variant="primary" />
+              </View>
+            )}
+          </View>
+
           {/* 通知設定 */}
           <View className="mb-6">
             <Text className="text-base font-semibold text-gray-800 mb-4">通知設定</Text>

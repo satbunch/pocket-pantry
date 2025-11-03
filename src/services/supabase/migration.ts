@@ -99,7 +99,7 @@ export const migrateGuestDataToSupabase = async (
 /**
  * Ingredient型をSupabaseIngredient型に変換
  */
-function convertIngredientToSupabase(ingredient: Ingredient, familyId: string): SupabaseIngredient {
+const convertIngredientToSupabase = (ingredient: Ingredient, familyId: string): SupabaseIngredient => {
   return {
     id: ingredient.id,
     family_id: familyId,
@@ -116,12 +116,15 @@ function convertIngredientToSupabase(ingredient: Ingredient, familyId: string): 
     created_at: ingredient.createdAt,
     updated_at: ingredient.updatedAt,
   };
-}
+};
 
 /**
  * ShoppingListItem型をSupabaseShoppingListItem型に変換
  */
-function convertShoppingListItemToSupabase(item: ShoppingListItem, shoppingListId: string): SupabaseShoppingListItem {
+const convertShoppingListItemToSupabase = (
+  item: ShoppingListItem,
+  shoppingListId: string
+): SupabaseShoppingListItem => {
   return {
     id: item.id,
     shopping_list_id: shoppingListId,
@@ -132,4 +135,4 @@ function convertShoppingListItemToSupabase(item: ShoppingListItem, shoppingListI
     created_at: item.createdAt,
     updated_at: item.updatedAt,
   };
-}
+};

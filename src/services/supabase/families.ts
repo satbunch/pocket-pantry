@@ -144,7 +144,7 @@ export const regenerateInviteCode = async (familyId: string): Promise<Family> =>
  * 招待コードを生成
  * フォーマット: XXXX-XXXX-XXXX（大文字英数字）
  */
-function generateInviteCode(): string {
+const generateInviteCode = (): string => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let code = '';
 
@@ -156,4 +156,4 @@ function generateInviteCode(): string {
   }
 
   return code;
-}
+};

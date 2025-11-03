@@ -295,6 +295,9 @@ src/
 - すべてのコンポーネントpropsに型定義
 - `any`型の使用禁止（unknown使用を検討）
 - エクスポートする型はすべて明示的に定義
+- **関数定義は必ずアロー関数を使用**（`const functionName = () => {}` 形式）
+  - 通常の関数宣言（`function functionName() {}`）は使用禁止
+  - デフォルトエクスポートするコンポーネントも `const ComponentName = () => {}` + `export default ComponentName` の形式を使用
 
 **スタイリング**:
 

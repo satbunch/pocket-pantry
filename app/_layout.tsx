@@ -17,7 +17,7 @@ import '../global.css';
  * - 認証画面は設定画面から「家族共有」を選択した時のみ表示
  * - ゲストモード（ローカルストレージ）で全機能が利用可能
  */
-function RootLayoutNav() {
+const RootLayoutNav = () => {
   useEffect(() => {
     // 通知ハンドラーを初期化
     setupNotificationHandler();
@@ -101,9 +101,9 @@ function RootLayoutNav() {
       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
     </Stack>
   );
-}
+};
 
-export default function RootLayout() {
+const RootLayout = () => {
   return (
     <AuthProvider>
       <ThemeProvider>
@@ -111,4 +111,6 @@ export default function RootLayout() {
       </ThemeProvider>
     </AuthProvider>
   );
-}
+};
+
+export default RootLayout;

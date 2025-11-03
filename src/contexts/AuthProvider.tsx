@@ -134,7 +134,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signUp = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
     });
@@ -142,6 +142,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (error) {
       throw new Error(error.message);
     }
+
+    if (!data.user) {
+      throw new Error('ユーザー情報の取得に失敗しました');
+    }
+
+    return data.user;
   };
 
   const signIn = async (email: string, password: string) => {

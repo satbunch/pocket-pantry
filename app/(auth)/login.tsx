@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react';
-import { View, ScrollView, Alert } from 'react-native';
+import { View, ScrollView, Alert, Text } from 'react-native';
 import { router } from 'expo-router';
 import { Button, Input } from '@rneui/themed';
 import { useAuth } from '@/hooks/useAuth';
@@ -42,10 +42,8 @@ export default function LoginScreen() {
         {/* ロゴ・タイトル */}
         <View className="mb-8">
           <View className="h-16 w-16 rounded-full bg-blue-500 self-center mb-6" />
-          <View className="text-center">
-            <View className="text-2xl font-bold text-gray-900 text-center mb-2">Pocket Pantry</View>
-            <View className="text-gray-600 text-center">食材管理アプリ</View>
-          </View>
+          <Text className="text-2xl font-bold text-gray-900 text-center mb-2">Pocket Pantry</Text>
+          <Text className="text-gray-600 text-center">食材管理アプリ</Text>
         </View>
 
         {/* ログインフォーム */}
@@ -82,7 +80,7 @@ export default function LoginScreen() {
 
         {/* サインアップリンク */}
         <View className="flex-row justify-center items-center">
-          <View className="text-gray-600 text-sm mr-2">アカウントをお持ちではありませんか？</View>
+          <Text className="text-gray-600 text-sm mr-2">アカウントをお持ちではありませんか？</Text>
           <Button
             type="clear"
             title="サインアップ"

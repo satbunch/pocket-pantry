@@ -17,7 +17,7 @@ export default function SignupScreen() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [userName, setUserName] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signUp, user } = useAuth();
+  const { signUp } = useAuth();
 
   const handleSignup = async () => {
     // バリデーション
@@ -38,18 +38,13 @@ export default function SignupScreen() {
 
     setLoading(true);
     try {
-      // 1. ユーザー登録
-      await signUp(email, password);
+      // 1. ユーザー登録してユーザー情報を取得
+      const user = await signUp(email, password);
 
-      // 2. ユーザーIDを取得（サインアップ直後は user が設定される）
-      if (!user) {
-        throw new Error('ユーザーIDを取得できません');
-      }
-
-      // 3. ファミリーを作成
+      // 2. ファミリーを作成
       const { family } = await createFamily('My Family', user.id, userName);
 
-      // 4. ゲストデータを移行
+      // 3. ゲストデータを移行
       try {
         const result = await migrateGuestDataToSupabase(family.id);
         console.log(`Migrated ${result.ingredientCount} ingredients and ${result.shoppingListCount} shopping items`);
@@ -58,7 +53,7 @@ export default function SignupScreen() {
         console.warn('Guest data migration failed:', migrationError);
       }
 
-      // 5. ホーム画面へ遷移
+      // 4. ホーム画面へ遷移
       router.replace('/(tabs)/inventory');
     } catch (error) {
       Alert.alert('サインアップエラー', error instanceof Error ? error.message : 'サインアップに失敗しました');
